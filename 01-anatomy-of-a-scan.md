@@ -35,37 +35,37 @@ The launch mechanics belong in the official [quickstart](https://docs.strix.ai/q
 
 Each scan gets one Docker sandbox for the whole agent tree. The Caido proxy sits beside that sandbox and intercepts traffic, while the `AgentCoordinator` keeps track of agents, inboxes, and state. The root agent carries the natural language side of the investigation, but the coordinator handles the control plane.
 
-For the sandbox boundary itself, see [the Docker sandbox](./04-the-docker-sandbox.md). For the traffic path through the proxy and browser, see [seeing traffic](./06-seeing-traffic-proxy-and-browser.md).
+For the sandbox boundary itself, see [the Docker sandbox](/04-the-docker-sandbox.md). For the traffic path through the proxy and browser, see [seeing traffic](/06-seeing-traffic-proxy-and-browser.md).
 
 ## 3. How the agent knows how to hack
 
 The agent starts with a system prompt from `strix/agents/prompts/system_prompt.jinja`, and `strix/agents/prompt.py` renders that prompt for each run. Skills enter through `strix/skills/` and `strix/tools/load_skill/tool.py`, following the already documented Skills concept on the official [Skills page](https://docs.strix.ai/advanced/skills).
 
-Strix does not hard code a rigid phase machine. Instead, the system prompt, the dedicated `think` tool in `strix/tools/thinking/tool.py`, and the todo tools in `strix/tools/todo/tools.py` nudge the model to reason before acting. That keeps the scan adaptive while still pushing it toward deliberate progress. For the loop mechanics, see [the agent loop](./03-the-agent-loop.md).
+Strix does not hard code a rigid phase machine. Instead, the system prompt, the dedicated `think` tool in `strix/tools/thinking/tool.py`, and the todo tools in `strix/tools/todo/tools.py` nudge the model to reason before acting. That keeps the scan adaptive while still pushing it toward deliberate progress. For the loop mechanics, see [the agent loop](/03-the-agent-loop.md).
 
 ## 4. Working the target
 
 The live scan runs through the SDK `Runner.run_streamed`, which keeps the model moving through a reason → act → observe cycle. Strix layers the capabilities around that stream: shell and filesystem access from `agents.sandbox.capabilities`, proxy tools from `strix/tools/proxy/tools.py`, and the interactive browser and terminal surface that Strix exposes to the agent.
 
-This part of the system is exploratory and evidence driven. The agent tries an action, reads the result, and follows whatever the target reveals next. For the loop itself and the toolkit boundary, see [the agent loop](./03-the-agent-loop.md) and [the toolkit layer](./05-the-toolkit-layer.md).
+This part of the system is exploratory and evidence driven. The agent tries an action, reads the result, and follows whatever the target reveals next. For the loop itself and the toolkit boundary, see [the agent loop](/03-the-agent-loop.md) and [the toolkit layer](/05-the-toolkit-layer.md).
 
 ## 5. Scaling out
 
 When one thread of work is not enough, `AgentCoordinator` in `strix/core/agents.py` extends the tree. `spawn_child_agent` and `respawn_subagents` in `strix/core/execution.py` create and recover children, and the multi agent graph tools in `strix/tools/agents_graph/tools.py` make that tree visible to the run.
 
-The shape matters more than the count. Parent and child agents let Strix keep local work local, while the root agent stays responsible for the whole scan. For the graph view, see [the graph of agents](./02-the-graph-of-agents.md).
+The shape matters more than the count. Parent and child agents let Strix keep local work local, while the root agent stays responsible for the whole scan. For the graph view, see [the graph of agents](/02-the-graph-of-agents.md).
 
 ## 6. Finding, validating, reporting
 
 Strix records findings only after live validation. `create_vulnerability_report` and `create_dependency_report` in `strix/tools/reporting/tool.py` capture the evidence, `strix/report/state.py` persists the run state, and `strix/report/writer.py` turns that state into the final report.
 
-This is validated, not pattern matched. Findings surface immediately in the UI, then roll into the run report once the evidence holds up. For the path from finding to report, see [from finding to report](./08-from-finding-to-report.md).
+This is validated, not pattern matched. Findings surface immediately in the UI, then roll into the run report once the evidence holds up. For the path from finding to report, see [from finding to report](/08-from-finding-to-report.md).
 
 ## 7. Finishing
 
 A scan ends only when the root agent calls `finish_scan` in `strix/tools/finish/tool.py`. A claim of completion does nothing on its own; the explicit finish call closes the run, and Strix tears down the sandbox afterward.
 
-Headless mode then uses the exit status to signal CI. For the end of the loop, see [the agent loop](./03-the-agent-loop.md).
+Headless mode then uses the exit status to signal CI. For the end of the loop, see [the agent loop](/03-the-agent-loop.md).
 
 ## Where to look in the code
 

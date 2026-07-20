@@ -6,7 +6,7 @@ The toolkit layer gives the model one interface and hides two tool families unde
 
 The same split explains the rest of the runtime. Strix decides which tools each role gets, which skills load into the prompt, and which lifecycle tool ends a run. The SDK provides the actual tool transport and the sandbox capabilities that the model sees as ordinary tools.
 
-Related concept pages: [sandbox layer](./04-the-sandbox-layer.md), [skills](./06-the-skills-layer.md), [agent graph](./07-the-agent-graph.md).
+Related concept pages: [the graph of agents](./02-the-graph-of-agents.md), [the agent loop](./03-the-agent-loop.md), [the docker sandbox](./04-the-docker-sandbox.md), [seeing traffic, proxy and browser](./06-seeing-the-traffic-proxy-and-browser.md).
 
 ## Host Side Function Tools
 
@@ -36,8 +36,8 @@ A compatibility path keeps older chat completions models usable. When a backend 
 
 ## Reader Facing Anchors
 
-- **Proxy** — host-side function tools that query Caido from the Strix process. The official usage page covers the commands; this layer explains why the tools stay host-side: [`https://docs.strix.ai/tools/proxy`](https://docs.strix.ai/tools/proxy).
-- **Browser** — `agent-browser` runs through shell inside the container, and the always-loaded `tooling/agent_browser` skill guides it. The official usage page covers the CLI; this layer explains why the browser is not a separate function tool: [`https://docs.strix.ai/tools/browser`](https://docs.strix.ai/tools/browser).
+- **Proxy** — host-side function tools that query Caido from the Strix process. The official usage page covers the commands; this layer explains why the tools stay host-side and adds the architectural view in [seeing traffic, proxy and browser](./06-seeing-the-traffic-proxy-and-browser.md): [`https://docs.strix.ai/tools/proxy`](https://docs.strix.ai/tools/proxy).
+- **Browser** — `agent-browser` runs through shell inside the container, and the always-loaded `tooling/agent_browser` skill guides it. The official usage page covers the CLI; this layer explains why the browser is not a separate function tool and adds the architectural view in [seeing traffic, proxy and browser](./06-seeing-the-traffic-proxy-and-browser.md): [`https://docs.strix.ai/tools/browser`](https://docs.strix.ai/tools/browser).
 - **Terminal** — the SDK shell capability exposes `exec_command` and `write_stdin`. It handles command execution and interactive sessions in the sandbox.
 - **Python** — no dedicated Python tool exists. Agents run `python3` through the shell, which keeps Python inside the same sandbox and networking rules as every other command.
 

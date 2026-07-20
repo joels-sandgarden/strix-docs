@@ -8,18 +8,18 @@ Strix runs on top of the OpenAI Agents SDK (`openai-agents[litellm]==0.14.6` in 
 - `strix/core/` — orchestration and lifecycle control (`runner.py`, `execution.py`, `agents.py`, `hooks.py`, `inputs.py`).
 - `strix/agents/` — agent construction and prompt context (`factory.py`, `prompt.py`, system prompt Jinja).
 - `strix/tools/` — host side function tools plus README stubs for SDK sandbox tools.
-- `strix/runtime/` — per-scan Docker sandbox lifecycle and Caido bootstrap.
+- `strix/runtime/` — Docker sandbox lifecycle and Caido proxy setup.
 - `strix/report/` — findings state and artifact writers.
 - `strix/telemetry/` — product analytics and per-scan logging.
 - `strix/config/` — settings and model/provider wiring.
 - `strix/skills/` — pentest playbooks injected into prompts; the concept page already lives in the official docs.
 
-The sandbox image definition lives in repo-root `containers/`, not under `strix/`.
+The sandbox image definition lives in the repo root `containers/`, not under `strix/`.
 
 ## Scan spine
 
 1. `strix/interface/main.py` starts the run, collects the scan inputs, and hands off to `run_strix_scan` in `strix/core/runner.py`.
-2. `run_strix_scan` creates the `AgentCoordinator` in `strix/core/agents.py` and brings up one Docker sandbox with a Caido proxy through `strix/runtime/session_manager.py`.
+2. `run_strix_scan` creates the `AgentCoordinator` in `strix/core/agents.py` and brings up one Docker sandbox and its Caido proxy through `strix/runtime/session_manager.py`.
 3. The runner builds the root agent with `build_strix_agent` in `strix/agents/factory.py`.
 4. `strix/core/execution.py` enters the run loop, the SDK `Runner` drives model and tool activity, and the loop can spawn child agents when the task branches.
 5. Findings land in `ReportState` in `strix/report/state.py`, and the root agent's `finish_scan` writes report artifacts under `strix_runs/<run>/`.
@@ -28,10 +28,10 @@ The sandbox image definition lives in repo-root `containers/`, not under `strix/
 
 ```mermaid
 flowchart LR
-  A[CLI and TUI] --> B[Core orchestration]
+  A[CLI and TUI] --> B[Coordinator and run loop]
   B --> C[SDK Runner]
   C --> D[Host tools]
-  C --> E[Sandbox tools]
+  C --> E[SDK sandbox tools]
   C --> F[Docker sandbox]
   F --> G[Caido proxy]
   F --> H[Report artifacts]

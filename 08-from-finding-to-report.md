@@ -18,7 +18,7 @@ This page explains how Strix turns a discovered vulnerability into a validated f
 
 `ReportState` in `strix/report/state.py` keeps the scan's vulnerability reports, final scan result, usage ledger, and `vulnerability_found_callback` in memory. `set_global_report_state` and `get_global_report_state` make that object process-global, so any agent can write into the same run state and the interface layer can surface the report immediately through that callback.
 
-That design trades strict isolation for shared visibility. One scan behaves like one shared ledger rather than several agent-specific notebooks, which lets the CLI and TUI show a finding as soon as `add_vulnerability_report` records it. The same state object also tracks usage through `LLMUsageLedger`, so the report records both what Strix found and what the scan cost to produce.
+That design trades strict isolation for shared visibility. One scan behaves like one shared ledger rather than several per-agent records, which lets the CLI and TUI show a finding as soon as `add_vulnerability_report` records it. The same state object also tracks usage through `LLMUsageLedger`, so the report records both what Strix found and what the scan cost to produce.
 
 ## Capture
 
@@ -46,7 +46,7 @@ When the scan finishes, `ReportState._save_artifacts` writes the executive repor
 
 ## How it fits the rest of Strix
 
-This page closes the loop from agent work to consumable output. The agent tree in `strix/core/execution.py` discovers the issue, the reporting tools record the structured finding, the sandbox and proxy prove it against the target, `ReportState` keeps `vulnerability_found_callback` open and tracks usage, and the writers finalize the artifacts that a user or CI system consumes.
+This page closes the loop from agent work to consumable output. The agent tree in `strix/core/execution.py` discovers the issue, the reporting tools record the structured finding, the sandbox and proxy exercise it against the target, `ReportState` keeps `vulnerability_found_callback` open and tracks usage, and the writers finalize the artifacts that a user or CI system consumes.
 
 The live presentation layer sits on top of that state. `strix/interface/cli.py` hydrates `ReportState` and prints live summaries, while `strix/interface/tui/app.py` and `strix/interface/tui/renderers/reporting_renderer.py` render new findings as they arrive.
 

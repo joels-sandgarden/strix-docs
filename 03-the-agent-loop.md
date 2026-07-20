@@ -2,7 +2,7 @@
 
 The OpenAI Agents SDK owns the inner reason, act, and observe cycle through `Runner.run_streamed`. Strix wraps that cycle with an outer control loop in `strix/core/execution.py` that decides when to park, when to retry, when to stop on lifecycle tools, and when to settle a scan. The familiar think-plan-act-observe story only works here as a behavioral shorthand: Strix does not implement a separate state machine, and the code never names one.
 
-This matters because the SDK handles the model, tool, and result loop, while Strix carries the run-wide policy around it. One scan owns one sandbox session bundle, one coordinator, one budget ledger, and one set of lifecycle rules. For the wider map, see [The Big Picture](./00-the-big-picture.md), [Anatomy of a Scan](./01-anatomy-of-a-scan.md), and [The Graph of Agents](./02-the-graph-of-agents.md).
+This matters because the SDK handles the model, tool, and result loop, while Strix carries the run-wide policy around it. One scan reuses one sandbox session bundle, one coordinator, one budget ledger, and one set of lifecycle rules. For the wider map, see [The Big Picture](./00-the-big-picture.md), [Anatomy of a Scan](./01-anatomy-of-a-scan.md), and [The Graph of Agents](./02-the-graph-of-agents.md).
 
 ## What the SDK owns
 
@@ -36,15 +36,15 @@ flowchart TD
 
 Strix treats termination as tool gated, not prose gated. The run settles when the agent calls `finish_scan` or `agent_finish`; parking on `wait_for_message` remains the other valid resting state. `ReportUsageHooks` records SDK usage after each model response, and it raises `BudgetExceededError` once the accumulated cost reaches `max_budget_usd`. That exception stops the scan and wakes parked agents so the tree can unwind cleanly.
 
-The model settings reinforce that shape. `make_model_settings(...)` keeps tool calls serialized and usage visible, so the coordinator and the usage ledger can make decisions from the same stream of facts. The result is a loop that favors explicit tool actions over free-form closing text, which matches the lifecycle contract documented in the agent graph page.
+The model settings reinforce that shape. `make_model_settings(...)` keeps tool calls serialized and usage visible, so the coordinator and the usage ledger can make decisions from the same stream of facts. The result is a loop that favors explicit tool actions over plain closing text, which matches the lifecycle contract on the agent graph page.
 
 ## Robustness and persistence
 
-The loop hardens itself when the model or the runtime misbehaves. Before each cycle, Strix enforces the image budget from `max_context_images`. If the model rejects a turn because older screenshots still pollute the session, Strix strips all images from the session and retries, up to three times. `_run_cycle` also ignores the LiteLLM "after shutdown" end-of-stream race and tolerates sandbox teardown errors once shutdown has already started.
+The loop absorbs a few common failure modes when the model or the runtime misbehaves. Before each cycle, Strix enforces the image budget from `max_context_images`. If the model rejects a turn because older screenshots still pollute the session, Strix strips all images from the session and retries, up to three times. `_run_cycle` also ignores the LiteLLM "after shutdown" end-of-stream race and tolerates sandbox teardown errors once shutdown has already started.
 
-Persistence stays split along the same boundaries. `session_manager.create_or_reuse(...)` keeps one sandbox session bundle per scan, not per agent, so the whole tree shares the same container boundary. Each agent still gets its own SQLite-backed session memory in `.state/agents.db`, and `AgentCoordinator` keeps the durable control-plane state around it: statuses, pending inbox counts, runtime handles, and the wait/consume flow that drives interactive parking. The context dict also survives from cycle to cycle, which lets the loop carry budget, scope, and parent metadata forward without rebuilding it each time.
+Persistence follows the same split. `session_manager.create_or_reuse(...)` keeps one sandbox session bundle per scan, not per agent, so the whole tree shares the same container boundary. Each agent still gets its own SQLite-backed session memory in `.state/agents.db`, and `AgentCoordinator` keeps the durable control-plane state around it: statuses, pending inbox counts, runtime handles, and the wait/consume flow that drives interactive parking. The context dict also survives from cycle to cycle, which lets the loop carry budget, scope, and parent metadata forward without rebuilding it each time.
 
-`child_initial_input(...)` matters here as well. It packages inherited context, agent identity, parent identity, and the new task into one user message so the next SDK turn starts cleanly, even with providers that reject consecutive user messages. That keeps child runs predictable while the outer loop keeps the tree coherent.
+`child_initial_input(...)` matters here as well. It packages inherited context, agent identity, parent identity, and the new task into one user message so the next SDK turn starts cleanly, even with providers that reject consecutive user messages. That keeps child runs predictable and keeps the tree coherent.
 
 ## Where to look in the code
 

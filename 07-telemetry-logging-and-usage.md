@@ -1,10 +1,8 @@
 # Telemetry, logging, and usage
 
-Strix does not emit distributed tracing spans in this snapshot. The OpenAI Agents SDK tracing layer is disabled, so observability comes from three Strix-owned mechanisms: anonymous product analytics, per-scan structured logging, and the durable LLM usage ledger.
+Strix does not emit distributed tracing spans in this snapshot because `strix/config/models.py` calls `set_tracing_disabled(True)` and `ReportState` in `strix/report/state.py` does not consume SDK tracing processors. Observability stays tied to three Strix-owned mechanisms: anonymous product analytics, per-scan structured logging, and the durable LLM usage ledger.
 
-`ReportState` stores the usage ledger and final report fields without consuming SDK tracing processors. Observability stays tied to the run directory instead of a tracing backend.
-
-## Product analytics (anonymous)
+## Product analytics (anonymous).
 
 Strix sends anonymous product analytics to PostHog and Scarf. Each process gets its own `SESSION_ID`, and the payloads also carry coarse system properties: `os`, `arch`, `python`, and `strix_version`. The analytics layer records product-usage events such as `scan_started`, `finding_reported`, `skill_loaded`, `scan_ended`, and `error`, so the data reflects feature use rather than scan internals.
 
@@ -15,7 +13,7 @@ Telemetry stays transparent and optional. `strix/telemetry/README.md` documents 
 - Vulnerability details never flow into telemetry events.
 - Raw LLM prompts and responses never leave the run artifacts.
 
-## Per-scan structured logging (the real run trace)
+## Per-scan structured logging (the real run trace).
 
 The run trace lives in `strix.log` inside the scan directory. `strix/telemetry/logging.py` attaches a context filter that stamps each record with `scan_id` and `agent_id`, and it wires that handler to the `strix` and `openai.agents` logger trees. The result reconstructs a run turn by turn, without pretending to be a distributed tracer.
 
@@ -23,7 +21,7 @@ The run trace lives in `strix.log` inside the scan directory. `strix/telemetry/l
 
 Run data lives under `strix_runs/<run_name>/`. The run record sits in `run.json`, `strix.log` captures the run transcript, and `.state/` holds the coordinator snapshot in `agents.json` plus the per-agent SDK session database in `agents.db`. `--resume` reads that state back and continues the same agent tree; `./02-the-graph-of-agents.md` covers that tree and resume model in more detail.
 
-## The LLM usage and cost ledger
+## The LLM usage and cost ledger.
 
 `LLMUsageLedger` turns raw SDK usage objects into a durable scan ledger. `strix/core/hooks.py` records usage after each model response, rolls token counts up per agent, and keeps a best-effort cost total alongside those counts. It also accepts observed provider cost when the SDK or provider reports it directly, which lets the persisted total track real spend as closely as the provider data allows.
 

@@ -32,12 +32,12 @@ That design matters because the runtime sees only one container per scan. A root
 
 `StrixDockerSandboxClient` in `strix/runtime/docker_client.py` reuses the SDK container client and replaces the container creation path with Strix-specific behavior. The code keeps the image entrypoint alive so `docker-entrypoint.sh` can launch Caido and prepare the container. It adds the Linux capabilities that raw socket tools need, maps `host.docker.internal` to the host gateway, and accepts optional resource limits and a log size cap so a runaway process does not fill the host disk. It also allows an optional custom network and supports read-only host bind mounts for large local repositories that would be too expensive to copy file by file.
 
- The configuration page covers the image, backend, and size limits, so this page only points there: [Configuration](https://docs.strix.ai/advanced/configuration). The CLI page explains the read-only mount behavior and its limits: [CLI](docs/usage/cli.mdx).
+The configuration page covers the image, backend, and size limits, so this page only points there: [Configuration](https://docs.strix.ai/advanced/configuration). The CLI page explains the read-only mount behavior and its limits: [CLI](https://docs.strix.ai/usage/cli).
 
 ## The isolation boundary is honest
 
 > **Limitation**  
-> The sandbox provides workspace isolation, not a hard security boundary. As of the current CLI docs, `--mount` uses a read-only bind mount for convenience, but a root process inside the container can remount it writable. That makes the feature appropriate for scanning trusted code, not for isolating hostile code. See the [CLI docs](docs/usage/cli.mdx) for the mount caveat.
+> The sandbox provides workspace isolation, not a hard security boundary. As of the current CLI docs, `--mount` uses a read-only bind mount for convenience, but a root process inside the container can remount it writable. That makes the feature appropriate for scanning trusted code, not for isolating hostile code. See the [CLI docs](https://docs.strix.ai/usage/cli) for the mount caveat.
 
 ## SDK pin and maintenance trade-off
 

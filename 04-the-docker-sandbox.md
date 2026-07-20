@@ -2,7 +2,7 @@
 
 ## Overview
 
-Strix uses a Docker container as the isolation model for each scan. The official [Sandbox Tools](/tools/sandbox) page lists the preinstalled tools inside that container; this page explains the boundary itself and the runtime that owns it. One container serves the whole agent tree, so sibling and child agents work inside the same workspace and network context.
+Strix uses a Docker container as the isolation model for each scan. The official [Sandbox Tools](https://docs.strix.ai/tools/sandbox) page lists the preinstalled tools inside that container; this page explains the boundary itself and the runtime that owns it. One container serves the whole agent tree, so sibling and child agents work inside the same workspace and network context.
 
 For the broader scan and agent model, see [Anatomy of a scan](/01-anatomy-of-a-scan.md), [The graph of agents](/02-the-graph-of-agents.md), [The agent loop](/03-the-agent-loop.md), [The toolkit layer](/05-the-toolkit-layer.md), and [Seeing traffic, proxy, and browser](/06-seeing-traffic-proxy-and-browser.md).
 
@@ -32,7 +32,7 @@ That design matters because the runtime sees only one container per scan. A root
 
 `StrixDockerSandboxClient` in `strix/runtime/docker_client.py` reuses the SDK container client and replaces the container creation path with Strix-specific behavior. The code keeps the image entrypoint alive so `docker-entrypoint.sh` can launch Caido and prepare the container. It adds the Linux capabilities that raw socket tools need, maps `host.docker.internal` to the host gateway, and accepts optional resource limits and a log size cap so a runaway process does not fill the host disk. It also allows an optional custom network and supports read-only host bind mounts for large local repositories that would be too expensive to copy file by file.
 
-The configuration page covers the image, backend, and size limits, so this page only points there: [Configuration](docs/advanced/configuration.mdx). The CLI page explains the read-only mount behavior and its limits: [CLI](docs/usage/cli.mdx).
+ The configuration page covers the image, backend, and size limits, so this page only points there: [Configuration](https://docs.strix.ai/advanced/configuration). The CLI page explains the read-only mount behavior and its limits: [CLI](docs/usage/cli.mdx).
 
 ## The isolation boundary is honest
 

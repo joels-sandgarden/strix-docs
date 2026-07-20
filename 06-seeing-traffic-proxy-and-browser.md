@@ -37,15 +37,15 @@ The [Sandbox Tools](./docs/tools/sandbox.mdx) catalog lists preinstalled utiliti
 
 `strix/tools/proxy/caido_api.py` owns the shared Caido client cache and the `_CLIENT_LOCK`. `strix/tools/proxy/tools.py` layers `_CAIDO_CALL_LOCK` on top and exposes `list_requests`, `view_request`, `repeat_request`, `list_sitemap`, `view_sitemap_entry`, and `scope_rules` as thin wrappers around the same client.
 
-The locks matter because Caido's GraphQL transport does not tolerate concurrent use. Two concurrent calls can race and raise `Transport is already connected`, so serialization is a correctness requirement, not a convenience. Once a request lands in Caido, the control plane turns it into a working surface: `view_request` inspects it, `repeat_request` replays it with changes, and the sitemap helpers turn captured traffic into a searchable map of the discovered surface.
+The locks matter because Caido's GraphQL transport does not tolerate concurrent use. Two concurrent calls can race and raise `Transport is already connected`, so serialization is a correctness requirement, not a convenience. Once a request lands in Caido, the control plane turns it into a testing surface: `view_request` inspects it, `repeat_request` replays it with changes, and the sitemap helpers turn captured traffic into a searchable map of the discovered surface.
 
 `scope_rules` acts as the guardrail. It keeps the scan focused on the authorized target by shaping which hosts Caido records and which hosts it ignores.
 
 ## The browser rides the same rail
 
-The browser path uses the same interception boundary as shell traffic. `strix/agents/prompt.py` always loads `tooling/agent_browser`, so the browser skill appears in every agent prompt. `strix/tools/agent_browser/README.md` and `containers/Dockerfile` show the runtime shape more clearly: the sandbox installs `agent-browser@0.26.0`, points it at Chromium, and drives it through `exec_command` rather than a dedicated function tool.
+The browser path uses the same boundary as shell traffic. `strix/agents/prompt.py` always loads `tooling/agent_browser`, so the browser skill appears in every agent prompt. `strix/tools/agent_browser/README.md` and `containers/Dockerfile` show the runtime shape more clearly: the sandbox installs `agent-browser@0.26.0`, points it at Chromium, and drives it through `exec_command` rather than a dedicated function tool.
 
-Because `agent-browser` runs inside the container, it inherits the same proxy environment as `curl` and Python. Its requests appear in Caido, so the browser extends the existing interception path instead of forming a separate one. During an interactive scan, an operator can open Caido, inspect captured traffic, and intervene before the next request continues.
+Because `agent-browser` runs inside the container, it inherits the same proxy environment as `curl` and Python. Caido records its requests, so the browser stays on the shared rail instead of becoming a separate channel. During an interactive scan, an operator can open Caido, inspect captured traffic, and intervene before the next request continues.
 
 For procedure and command syntax, see [HTTP Proxy](https://docs.strix.ai/tools/proxy) and [Browser](https://docs.strix.ai/tools/browser).
 

@@ -42,7 +42,7 @@ The trade-off is deliberate. Deterministic package identity gives dependency CVE
 
 When the scan finishes, `ReportState._save_artifacts` writes the executive report, vulnerability markdown files, `vulnerabilities.csv`, `vulnerabilities.json`, the SARIF document, and `run.json` under `strix_runs/<run>/`. `strix/report/writer.py` owns the markdown and JSON artifacts, and `strix/report/sarif.py` turns the same findings into SARIF 2.1.0 with repository provenance when Strix can derive it.
 
-`ReportState` wraps SARIF emission in its own `try` and `except`, so a SARIF problem does not stop the rest of the output pipeline. That separation keeps the run record, markdown reports, and CSV index intact even if the SARIF writer fails. Each finding also feeds `posthog.finding` and `scarf.finding`, the anonymous analytics hooks in `strix/telemetry/posthog.py` and `strix/telemetry/scarf.py`.
+`ReportState` wraps SARIF emission in its own `try` and `except`, so a SARIF problem does not stop the rest of the output pipeline. That separation keeps the run record, markdown reports, and CSV index intact even if the SARIF writer fails. Each finding also feeds `posthog.finding` and `scarf.finding`, carrying severity and CWE metadata into the anonymous analytics hooks in `strix/telemetry/posthog.py` and `strix/telemetry/scarf.py`.
 
 ## How it fits the rest of Strix
 

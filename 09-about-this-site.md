@@ -19,7 +19,7 @@ Doc Holiday (https://doc.holiday) wrote this guide by exploring the Strix source
 
 ## Scope and corrections
 
-This guide captures a snapshot of an actively developed codebase pinned to a specific OpenAI Agents SDK version. Because the repository pins that SDK release, the guide reflects current behavior rather than a permanent contract. The official docs remain the authoritative reference for installation, usage, configuration, and the Skills concept. The [official Skills guide](https://docs.strix.ai/advanced/skills) covers that topic in its own right, so this page only mentions it as part of the wider documentation set. It leaves installation, usage, configuration, and Skills to the official docs, which already cover those topics in detail.
+This guide captures a snapshot of an actively developed codebase pinned to a specific OpenAI Agents SDK version. Because the repository pins that SDK release, the guide reflects current behavior rather than a permanent contract. The official docs remain the authoritative reference for installation, usage, configuration, and the Skills concept. The [official Skills guide](https://docs.strix.ai/advanced/skills) covers that topic in its own right, so this page only mentions it as part of the wider documentation set. It leaves installation, usage, configuration, and Skills to the official docs, which already cover those topics in detail. It stays at the concept level, so it names the moving parts without reproducing reference tables or setup steps.
 
 [GENERATED_FROM: commit SHORT_SHA, DATE — the operator will replace this placeholder; include it verbatim, do NOT substitute a commit or date yourself]
 

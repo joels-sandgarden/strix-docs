@@ -1,6 +1,6 @@
 # Telemetry, logging, and usage
 
-Strix does not emit distributed tracing spans in this snapshot because `strix/config/models.py` calls `set_tracing_disabled(True)`, and `ReportState` in `strix/report/state.py` does not consume SDK tracing processors. Observability stays tied to three Strix-owned mechanisms: anonymous product analytics, per-scan structured logging, and the durable LLM usage ledger.
+Strix does not emit distributed tracing spans in this snapshot because `strix/config/models.py` calls `set_tracing_disabled(True)` and `ReportState` in `strix/report/state.py` does not consume SDK tracing processors. Instead, observability stays tied to three Strix-owned mechanisms: anonymous product analytics, per-scan structured logging, and the durable LLM usage ledger.
 
 ## Product analytics (anonymous).
 

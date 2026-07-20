@@ -27,12 +27,12 @@ Corrections and updates are welcome through [CONTACT_OR_REPO_LINK placeholder fo
 
 ## Table of contents
 
-- [00 — The big picture](./00-the-big-picture.md) — The map: Strix as a pentest app built on the OpenAI Agents SDK, and the shape of one scan.
-- [01 — Anatomy of a scan](./01-anatomy-of-a-scan.md) — End to end trace of one `strix` run: CLI to coordinator + sandbox to root agent loop to tools to finding to report.
-- [02 — The graph of agents](./02-the-graph-of-agents.md) — How the AgentCoordinator grows a tree of agents and how they coordinate through shared sessions.
-- [03 — The agent loop](./03-the-agent-loop.md) — What "think-plan-act-observe" really is: the SDK Runner loop plus Strix's lifecycle-gating, budget, and parking.
-- [04 — The Docker sandbox](./04-the-docker-sandbox.md) — The per-scan Docker container: the isolation boundary, its lifecycle, and the SDK-subclass customizations.
-- [05 — The toolkit layer](./05-the-toolkit-layer.md) — The two tool families (host-side function tools vs in-container SDK capabilities) and how the model reaches them.
-- [06 — Seeing traffic, proxy, and browser](./06-seeing-traffic-proxy-and-browser.md) — Why all container traffic flows through the Caido proxy, and how the browser rides on it.
-- [07 — Telemetry, logging, and usage](./07-telemetry-logging-and-usage.md) — What Strix records about a run: analytics, per-scan logs, and the LLM usage/cost ledger.
-- [08 — From finding to report](./08-from-finding-to-report.md) — The vulnerability report model: how findings are captured, deduped, and written out as artifacts.
+- [00 — The big picture](./00-the-big-picture.md) — the map: Strix as a pentest app built on the OpenAI Agents SDK, and the shape of one scan
+- [01 — Anatomy of a scan](./01-anatomy-of-a-scan.md) — end-to-end trace of one `strix` run: CLI to coordinator + sandbox to root agent loop to tools to finding to report
+- [02 — The graph of agents](./02-the-graph-of-agents.md) — how the AgentCoordinator grows a tree of agents and how they coordinate through shared sessions
+- [03 — The agent loop](./03-the-agent-loop.md) — what "think-plan-act-observe" really is: the SDK Runner loop plus Strix's lifecycle-gating, budget, and parking
+- [04 — The Docker sandbox](./04-the-docker-sandbox.md) — the per-scan Docker container: the isolation boundary, its lifecycle, and the SDK-subclass customizations
+- [05 — The toolkit layer](./05-the-toolkit-layer.md) — the two tool families (host-side function tools vs in-container SDK capabilities) and how the model reaches them
+- [06 — Seeing traffic, proxy, and browser](./06-seeing-traffic-proxy-and-browser.md) — why all container traffic flows through the Caido proxy, and how the browser rides on it
+- [07 — Telemetry, logging, and usage](./07-telemetry-logging-and-usage.md) — what Strix records about a run: analytics, per-scan logs, and the LLM usage/cost ledger
+- [08 — From finding to report](./08-from-finding-to-report.md) — the vulnerability report model: how findings are captured, deduped, and written out as artifacts

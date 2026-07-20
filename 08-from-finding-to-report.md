@@ -63,5 +63,5 @@ For output consumption and delivery context, see the official CLI docs and CI/CD
 - `strix/tools/reporting/tool.py` — `create_vulnerability_report`, `create_dependency_report`, `_do_create`, `_do_create_dependency`
 - `strix/report/dedupe.py` — `check_duplicate`, `_check_dependency_duplicate`, `_dependency_identity`, the `ModelTracing.DISABLED` call
 - `strix/report/writer.py` — `write_executive_report`, `write_vulnerabilities`, `render_vulnerability_md`
-- `strix/report/sarif.py` — `write_sarif`, `build_sarif_report`, `_apply_repository_context`
+- `strix/report/sarif.py` — `write_sarif_report`, `build_sarif_report`, `write_sarif`, `build_sarif_document`
 - `strix/interface/cli.py`, `strix/interface/tui/app.py`, `strix/interface/tui/renderers/reporting_renderer.py` — state hydration, live callbacks, and report display

@@ -2,7 +2,7 @@
 
 The OpenAI Agents SDK owns the inner reason, act, and observe cycle through `Runner.run_streamed`. Strix wraps that cycle with an outer control loop in `strix/core/execution.py` that decides when to park, when to retry, when to stop on lifecycle tools, and when to settle a scan. The familiar think-plan-act-observe story only works here as a behavioral shorthand: Strix does not implement a separate state machine, and the code never names one.
 
-This matters because the SDK handles the model, tool, and result loop, while Strix carries the run-wide policy around it. One scan reuses one sandbox session bundle, one coordinator, one budget ledger, and one set of lifecycle rules. For the wider map, see [The Big Picture](./00-the-big-picture.md), [Anatomy of a Scan](./01-anatomy-of-a-scan.md), and [The Graph of Agents](./02-the-graph-of-agents.md).
+This matters because the SDK handles the model, tool, and result loop, while Strix carries the run-wide policy around it. One scan reuses a single sandbox session bundle, one coordinator, one budget ledger, and one set of lifecycle rules. For the wider map, see [The Big Picture](./00-the-big-picture.md), [Anatomy of a Scan](./01-anatomy-of-a-scan.md), and [The Graph of Agents](./02-the-graph-of-agents.md).
 
 ## What the SDK owns
 
@@ -36,7 +36,7 @@ flowchart TD
 
 Strix treats termination as tool gated, not prose gated. The run settles when the agent calls `finish_scan` or `agent_finish`; parking on `wait_for_message` remains the other valid resting state. `ReportUsageHooks` records SDK usage after each model response, and it raises `BudgetExceededError` once the accumulated cost reaches `max_budget_usd`. That exception stops the scan and wakes parked agents so the tree can unwind cleanly.
 
-The model settings reinforce that shape. `make_model_settings(...)` keeps tool calls serialized and usage visible, so the coordinator and the usage ledger can make decisions from the same stream of facts. The result is a loop that favors explicit tool actions over plain closing text, which matches the lifecycle contract on the agent graph page.
+The model settings reinforce that shape. `make_model_settings(...)` keeps tool calls serialized and usage visible, so the coordinator and the usage ledger can make decisions from the same stream of facts. The result is a loop that favors explicit tool actions over plain final text, which matches the lifecycle contract on [The Graph of Agents](./02-the-graph-of-agents.md).
 
 ## Robustness and persistence
 

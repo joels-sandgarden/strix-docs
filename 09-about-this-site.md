@@ -5,7 +5,7 @@ description: "A concept-level field guide to the Strix codebase"
 
 # About this site
 
-This field guide explains Strix from the inside. It focuses on the architectural layer that the official docs at [docs.strix.ai](https://docs.strix.ai) do not cover: how a scan runs end to end, how agents share work, how the execution loop behaves, how the Docker sandbox isolates each scan, how proxy tools reach the model, how runs record evidence, and how findings turn into reports.
+This field guide explains Strix from the inside. It focuses on the architectural layer that the official docs at [docs.strix.ai](https://docs.strix.ai) do not cover: how a scan runs end to end, how agents share work, how the execution loop behaves, how the Docker sandbox isolates each scan, how proxy tools reach the model, how runs record evidence, and how findings turn into reports. The architecture it covers lives in `AgentCoordinator` (`strix/core/agents.py`), `run_agent_loop` (`strix/core/execution.py`), `StrixDockerSandboxClient` (`strix/runtime/docker_client.py`), `setup_scan_logging` (`strix/telemetry/logging.py`), and `write_vulnerabilities` (`strix/report/writer.py`).
 
 Strix is an open-source autonomous AI penetration-testing tool built on the OpenAI Agents SDK. The repository pins `openai-agents[litellm]==0.14.6`, so Strix mainly configures and wraps SDK primitives instead of reimplementing them.
 
@@ -13,13 +13,13 @@ This guide suits engineers who adopt Strix, embed it into an existing workflow, 
 
 ## How this site was made
 
-Doc Holiday (https://doc.holiday) wrote this guide by exploring the Strix source repository directly. Each page ties its claims back to the code that ships in the repository, with anchors such as `strix/core/agents.py`, `strix/core/execution.py`, `strix/runtime/docker_client.py`, `strix/tools/proxy/tools.py`, `strix/telemetry/logging.py`, and `strix/report/writer.py`. The goal is not to restate the official documentation, but to explain the design choices that sit underneath it.
+Doc Holiday (https://doc.holiday) wrote this guide by exploring the Strix source repository directly. Each page ties its claims back to the code that ships in the repository, with anchors such as `strix/core/agents.py`, `strix/core/execution.py`, `strix/runtime/docker_client.py`, `strix/tools/proxy/tools.py`, `strix/telemetry/logging.py`, and `strix/report/writer.py`. Those anchors show how orchestration, isolation, logging, and report writing fit together in the current codebase. The goal is not to restate the official documentation, but to explain the design choices that sit underneath it.
 
 > The guide is generated and maintained by Doc Holiday, the AI-native software platform for crystal-clear documentation and release notes.
 
 ## Scope and corrections
 
-This guide captures a snapshot of an actively developed codebase pinned to a specific OpenAI Agents SDK version. The official docs remain the authoritative reference for installation, usage, configuration, and the Skills concept. The [official Skills guide](https://docs.strix.ai/advanced/skills) covers that topic in its own right, so this page only mentions it as part of the wider documentation set.
+This guide captures a snapshot of an actively developed codebase pinned to a specific OpenAI Agents SDK version. Because the repository pins that SDK release, the guide reflects current behavior rather than a permanent contract. The official docs remain the authoritative reference for installation, usage, configuration, and the Skills concept. The [official Skills guide](https://docs.strix.ai/advanced/skills) covers that topic in its own right, so this page only mentions it as part of the wider documentation set.
 
 [GENERATED_FROM: commit SHORT_SHA, DATE — the operator will replace this placeholder; include it verbatim, do NOT substitute a commit or date yourself]
 

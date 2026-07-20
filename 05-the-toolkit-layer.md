@@ -20,7 +20,7 @@ Related concept pages: [sandbox layer](./04-the-sandbox-layer.md), [skills](./06
 
 ## SDK Sandbox Capabilities
 
-Strix does not write shell, filesystem, patching, or image viewing as function tools. `build_strix_agent` attaches them as SDK sandbox capabilities when it creates each `SandboxAgent`, and the SDK discovers them from the tool schema after attachment. That is why the directories that contain only README files — `strix/tools/shell/`, `strix/tools/agent_browser/`, `strix/tools/apply_patch/`, and `strix/tools/view_image/` — contain documentation rather than implementations.
+Strix does not write shell, filesystem, patching, or image viewing as function tools. `build_strix_agent` wires them in as SDK sandbox capabilities when it creates each `SandboxAgent`, and the SDK discovers them from the tool schema after attachment. That is why the directories that contain only README files — `strix/tools/shell/`, `strix/tools/agent_browser/`, `strix/tools/apply_patch/`, and `strix/tools/view_image/` — contain documentation rather than implementations.
 
 The factory also preserves a naming bridge for `apply_patch`: the SDK exposes it to the model as `patch`, which matches the factory custom input-name mapping. `exec_command` and `write_stdin` make up the shell capability. They cover terminal work, process control, and interactive programs, including `python3`, because Strix does not ship a dedicated Python tool. The `tooling/python` skill makes that explicit, and the shell README explains that `write_stdin` only works for processes started with a PTY.
 
@@ -45,9 +45,9 @@ A compatibility path keeps older chat completions models usable. When a backend 
 
 ```mermaid
 flowchart LR
-  Tools["Host tools (function)"]
+  Tools["Host tools (Strix)"]
   Agent["Agent (SandboxAgent)"]
-  Caps["Sandbox caps (SDK)"]
+  Caps["SDK caps (sandbox)"]
 
   Tools --> Agent
   Agent --> Caps

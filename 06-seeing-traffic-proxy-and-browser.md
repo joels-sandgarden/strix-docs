@@ -24,7 +24,7 @@ flowchart LR
   host[Proxy tools]
 
   curl --> caido
-  py --> caido
+  python --> caido
   browser --> caido
   host --> caido
   caido --> target

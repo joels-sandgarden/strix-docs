@@ -1,6 +1,6 @@
- # The Big Picture
+# The Big Picture
 
-Strix runs on top of the OpenAI Agents SDK (`openai-agents[litellm]==0.14.6` in `pyproject.toml`). The SDK owns the single-agent execution loop, the sandbox client, and the shell, filesystem, `apply_patch`, and `view_image` capabilities; Strix layers scan orchestration, prompt assembly, skills, Docker and proxy customization, reporting, telemetry, and the CLI and TUI around that core. This guide shows the connective architecture that the official docs at [Quickstart](https://docs.strix.ai/quickstart) and [Skills](https://docs.strix.ai/advanced/skills) do not repeat.
+Strix runs on top of the OpenAI Agents SDK (`openai-agents[litellm]==0.14.6` in `pyproject.toml`). The SDK owns the single-agent execution loop, the sandbox client, and the shell, filesystem, `apply_patch`, and `view_image` capabilities; Strix layers scan orchestration, prompting, skills, Docker and proxy customizations, reporting, telemetry, and the CLI and TUI around that core. This guide covers the connective architecture that the official docs at [Quickstart](https://docs.strix.ai/quickstart) and [Skills](https://docs.strix.ai/advanced/skills) leave to the reference pages.
 
 ## Package map
 

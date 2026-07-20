@@ -8,12 +8,14 @@ The design centers on a single sandbox per scan and a single proxy control plane
 
 `strix/runtime/session_manager.py` injects the same proxy values into the per scan manifest, exposes Caido's port, and caches the bundle by `scan_id`, so the whole agent tree shares one container and one Caido instance. `strix/runtime/caido_bootstrap.py` then logs in as guest from inside the container and creates the Caido client on the host side against the exposed endpoint.
 
+For the sandbox boundary, see [The Docker Sandbox](./04-the-docker-sandbox.md).
+
 ```mermaid
 flowchart LR
   subgraph sandbox[Sandbox]
     curl[curl]
     nmap[nmap]
-    py[python]
+    python[python]
     browser[browser]
   end
 
@@ -31,7 +33,7 @@ flowchart LR
 
 `strix/runtime/docker_client.py` preserves the image entrypoint, keeps the container alive with `tail -f /dev/null`, adds `NET_ADMIN` and `NET_RAW`, and maps `host.docker.internal` to `host-gateway`. That keeps targets served from the host reachable and also marks the edge of the proxy boundary: clients that honor the proxy settings flow through Caido, while raw network tools such as `nmap` still use their own network capabilities.
 
-The [Sandbox Tools](./docs/tools/sandbox.mdx) catalog lists preinstalled utilities. It does not describe container isolation.
+For the tool transport layer, see [The Toolkit Layer](./05-the-toolkit-layer.md).
 
 ## The Caido control plane
 

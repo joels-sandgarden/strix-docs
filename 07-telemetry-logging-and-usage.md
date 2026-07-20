@@ -25,11 +25,11 @@ Run data lives under `strix_runs/<run_name>/`. The run record sits in `run.json`
 
 ## The LLM usage and cost ledger
 
-`LLMUsageLedger` turns raw SDK usage objects into a durable scan ledger. `strix/core/hooks.py` records usage after each model response, rolls token counts up per agent, and keeps a best-effort cost total alongside those counts. The ledger also accepts observed provider cost when the SDK or provider reports it directly, which lets the persisted total track real spend as closely as the provider data allows.
+`LLMUsageLedger` turns raw SDK usage objects into a durable scan ledger. `strix/core/hooks.py` records usage after each model response, rolls token counts up per agent, and keeps a best-effort cost total alongside those counts. It also accepts observed provider cost when the SDK or provider reports it directly, which lets the persisted total track real spend as closely as the provider data allows.
 
 Budget enforcement uses the same ledger. When the accumulated cost reaches the configured cap, `ReportUsageHooks` raises `BudgetExceededError` and the scan stops cleanly. Because `ReportState` hydrates the ledger from persisted run data, a resumed run starts from the totals already on disk. Reported cost and estimated cost can differ by provider, so the ledger treats cost as an accountable total rather than a perfect invoice.
 
-The saved run state and the final report both surface those totals. That keeps cost accounting visible even after the process exits, and it lets the final artifacts reflect what the run actually consumed.
+The saved run state and the final report both surface those totals. That keeps cost accounting visible after the process exits and lets the final artifacts reflect what the run actually consumed.
 
 As of this snapshot, the configuration docs still describe `TRACELOOP_BASE_URL`, `TRACELOOP_API_KEY`, `TRACELOOP_HEADERS`, and a local-plus-remote `events.jsonl` export path on the [configuration page](https://docs.strix.ai/advanced/configuration). The current source tree does not implement remote span export.
 

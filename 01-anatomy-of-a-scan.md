@@ -2,7 +2,7 @@
 
 Strix scans run on the OpenAI Agents SDK. The SDK runner drives the loop; Strix wraps that runner with orchestration, prompting, sandboxing, proxying, and reporting so the scan behaves like a complete product flow instead of a bare model call.
 
-The result is an end to end scan pipeline that turns a command into a running investigation. The sections below describe the shape of that pipeline at a high level, not the individual API calls inside it.
+The sections below describe the shape of that pipeline at a high level, not the individual API calls inside it.
 
 ```mermaid
 flowchart LR
@@ -71,8 +71,7 @@ Headless mode then uses the exit status to signal CI. For the end of the loop, s
 
 - `strix/agents/prompts/system_prompt.jinja` — scan framing prompt.
 - `strix/agents/prompt.py` — prompt rendering and skill injection.
-- `strix/core/agents.py` — `AgentCoordinator`.
-- `strix/core/execution.py` — `spawn_child_agent` and `respawn_subagents`.
+- `strix/core/agents.py` and `strix/core/execution.py` — `AgentCoordinator`, `spawn_child_agent`, and `respawn_subagents`.
 - `strix/tools/reporting/tool.py` — `create_vulnerability_report` and `create_dependency_report`.
 - `strix/report/state.py` and `strix/report/writer.py` — finding persistence and report rendering.
 - `strix/tools/finish/tool.py` — `finish_scan`.

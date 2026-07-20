@@ -16,7 +16,7 @@ This page explains how Strix turns a discovered vulnerability into a validated f
 
 ## `ReportState` as the live hub
 
-`ReportState` in `strix/report/state.py` keeps the scan's vulnerability reports, final scan result, usage ledger, and live finding callback in memory. `set_global_report_state` and `get_global_report_state` make that object process-global, so any agent can write into the same run state and the interface layer can surface the report immediately.
+`ReportState` in `strix/report/state.py` keeps the scan's vulnerability reports, final scan result, usage ledger, and `vulnerability_found_callback` in memory. `set_global_report_state` and `get_global_report_state` make that object process-global, so any agent can write into the same run state and the interface layer can surface the report immediately through that callback.
 
 That design trades strict isolation for shared visibility. One scan behaves like one shared ledger rather than several agent-specific notebooks, which lets the CLI and TUI show a finding as soon as `add_vulnerability_report` records it. The same state object also tracks usage through `LLMUsageLedger`, so the report records both what Strix found and what the scan cost to produce.
 
@@ -42,11 +42,11 @@ The trade-off is deliberate. Deterministic package identity gives dependency CVE
 
 When the scan finishes, `ReportState._save_artifacts` writes the executive report, vulnerability markdown files, `vulnerabilities.csv`, `vulnerabilities.json`, the SARIF document, and `run.json` under `strix_runs/<run>/`. `strix/report/writer.py` owns the markdown and JSON artifacts, and `strix/report/sarif.py` turns the same findings into SARIF 2.1.0 with repository provenance when Strix can derive it.
 
-`ReportState` wraps SARIF emission in its own `try` and `except`, so a SARIF problem does not stop the rest of the output pipeline. That separation keeps the run record, markdown reports, and CSV index intact even if the SARIF writer fails. Each finding also feeds the anonymous analytics counters in `strix/telemetry/posthog.py` and `strix/telemetry/scarf.py`.
+`ReportState` wraps SARIF emission in its own `try` and `except`, so a SARIF problem does not stop the rest of the output pipeline. That separation keeps the run record, markdown reports, and CSV index intact even if the SARIF writer fails. Each finding also feeds `posthog.finding` and `scarf.finding`, the anonymous analytics hooks in `strix/telemetry/posthog.py` and `strix/telemetry/scarf.py`.
 
 ## How it fits the rest of Strix
 
-This page closes the loop from agent work to consumable output. The agent tree in `strix/core/execution.py` discovers the issue, the reporting tools record the structured finding, the sandbox and proxy prove it against the target, `ReportState` keeps the live callback open and tracks usage, and the writers finalize the artifacts that a user or CI system consumes.
+This page closes the loop from agent work to consumable output. The agent tree in `strix/core/execution.py` discovers the issue, the reporting tools record the structured finding, the sandbox and proxy prove it against the target, `ReportState` keeps `vulnerability_found_callback` open and tracks usage, and the writers finalize the artifacts that a user or CI system consumes.
 
 The live presentation layer sits on top of that state. `strix/interface/cli.py` hydrates `ReportState` and prints live summaries, while `strix/interface/tui/app.py` and `strix/interface/tui/renderers/reporting_renderer.py` render new findings as they arrive.
 

@@ -14,7 +14,7 @@ The runtime keeps the ownership line clear. When an agent invokes shell or files
 
 ## Lifecycle and ownership
 
-`create_or_reuse()` in `strix/runtime/session_manager.py` builds the sandbox bundle for a scan ID. `build_session_entries()` splits local sources into copied manifest entries and read only bind mounts. The session manager then sets the proxy environment variables that point at the in-container Caido listener, selects the Docker backend through `get_backend()`, creates the session, and calls `session.start()` so the manifest entries appear in the running container. It then caches the client, session, and Caido client under `scan_id`. A later call with the same scan ID returns that cached bundle instead of creating another container.
+`create_or_reuse()` in `strix/runtime/session_manager.py` builds the sandbox bundle for a scan ID. `build_session_entries()` splits local sources into copied manifest entries and read-only bind mounts. The session manager then sets the proxy environment variables that point at the in-container Caido listener, selects the Docker backend through `get_backend()`, creates the session, and calls `session.start()` so the manifest entries appear in the running container. It then caches the client, session, and Caido client under `scan_id`. A later call with the same scan ID returns that cached bundle instead of creating another container.
 
 The backend registry currently ships `docker` only, but `register_backend()` keeps the API open for another runtime later. The Docker backend in `strix/runtime/backends.py` creates the Strix Docker sandbox client and starts the session because `client.create()` only builds the session object; `session.start()` performs the copy and mount work.
 
@@ -30,16 +30,16 @@ That design matters because the runtime sees only one container per scan. A root
 
 ## What Strix changes in the SDK container
 
-`StrixDockerSandboxClient` in `strix/runtime/docker_client.py` reuses the SDK container client and replaces the container creation path with Strix specific behavior. The code keeps the image entrypoint alive so `docker-entrypoint.sh` can launch Caido and prepare the container. It adds the Linux capabilities that raw socket tools need, maps `host.docker.internal` to the host gateway, and accepts optional resource limits and a log size cap so a runaway process does not fill the host disk. It also allows an optional custom network and supports read only host bind mounts for large local repositories that would be too expensive to copy file by file.
+`StrixDockerSandboxClient` in `strix/runtime/docker_client.py` reuses the SDK container client and replaces the container creation path with Strix-specific behavior. The code keeps the image entrypoint alive so `docker-entrypoint.sh` can launch Caido and prepare the container. It adds the Linux capabilities that raw socket tools need, maps `host.docker.internal` to the host gateway, and accepts optional resource limits and a log size cap so a runaway process does not fill the host disk. It also allows an optional custom network and supports read-only host bind mounts for large local repositories that would be too expensive to copy file by file.
 
-The configuration page covers the image, backend, and size limits, so this page only points there: [Configuration](docs/advanced/configuration.mdx). The CLI page explains the read only mount behavior and its limits: [CLI](docs/usage/cli.mdx).
+The configuration page covers the image, backend, and size limits, so this page only points there: [Configuration](docs/advanced/configuration.mdx). The CLI page explains the read-only mount behavior and its limits: [CLI](docs/usage/cli.mdx).
 
 ## The isolation boundary is honest
 
 > **Limitation**  
-> The sandbox provides workspace isolation, not a hard security boundary. As of the current CLI docs, `--mount` uses a read only bind mount for convenience, but a root process inside the container can remount it writable. That makes the feature appropriate for scanning trusted code, not for isolating hostile code. See the [CLI docs](docs/usage/cli.mdx) for the mount caveat.
+> The sandbox provides workspace isolation, not a hard security boundary. As of the current CLI docs, `--mount` uses a read-only bind mount for convenience, but a root process inside the container can remount it writable. That makes the feature appropriate for scanning trusted code, not for isolating hostile code. See the [CLI docs](docs/usage/cli.mdx) for the mount caveat.
 
-## SDK pin and maintenance trade off
+## SDK pin and maintenance trade-off
 
 This design keeps Strix coupled to `openai-agents[litellm]==0.14.6` in `pyproject.toml`. That coupling buys a small, precise set of container changes, but it also creates a maintenance cost: a future SDK upgrade requires re-merging the copied parent `_create_container()` body in `strix/runtime/docker_client.py`. Strix accepts that cost because the image entrypoint, host gateway mapping, and network capabilities depend on the override.
 
@@ -69,7 +69,7 @@ flowchart LR
 
 ## Where to look in the code
 
-- `strix/runtime/session_manager.py` — builds the per scan bundle, sets proxy environment variables, caches by `scan_id`, and tears it down.
+- `strix/runtime/session_manager.py` — builds the per-scan bundle, sets proxy environment variables, caches by `scan_id`, and tears it down.
 - `strix/runtime/docker_client.py` — subclasses the SDK Docker sandbox client and applies the Strix container changes.
 - `strix/runtime/backends.py` — selects the Docker backend and calls `session.start()`.
 - `strix/runtime/caido_bootstrap.py` — logs in to Caido from inside the session and selects a temporary project.

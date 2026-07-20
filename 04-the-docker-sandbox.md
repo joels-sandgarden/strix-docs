@@ -2,13 +2,13 @@
 
 ## Overview
 
-Strix uses a Docker container as the isolation model for each scan. The official [Sandbox Tools](/tools/sandbox) page lists the preinstalled tools inside that container; this page explains the boundary itself. Strix creates one container per scan and shares it across the whole agent tree, so sibling and child agents work inside the same workspace and network context.
+Strix uses a Docker container as the isolation model for each scan. The official [Sandbox Tools](/tools/sandbox) page lists the preinstalled tools inside that container; this page explains the boundary itself and the runtime that owns it. One container serves the whole agent tree, so sibling and child agents work inside the same workspace and network context.
 
 For the broader scan and agent model, see [Anatomy of a scan](/01-anatomy-of-a-scan.md), [The graph of agents](/02-the-graph-of-agents.md), [The agent loop](/03-the-agent-loop.md), [The toolkit layer](/05-the-toolkit-layer.md), and [Seeing traffic, proxy, and browser](/06-seeing-traffic-proxy-and-browser.md).
 
 ## The mental model
 
-The sandbox does three jobs at once. It gives a scan a workspace boundary, it gives the toolkit layer a place to run shell and filesystem capabilities, and it places Caido between the in-container tools and the target. Strix does not build container management from scratch. It subclasses the OpenAI Agents SDK Docker sandbox client in `strix/runtime/docker_client.py`, then changes the container creation path to fit Strix’s runtime.
+The sandbox gives a scan a workspace boundary, a shared execution environment for shell and filesystem capabilities, and a Caido interception layer. Strix does not build container management from scratch. It subclasses the OpenAI Agents SDK Docker sandbox client in `strix/runtime/docker_client.py`, then changes the container creation path to fit Strix’s runtime.
 
 The runtime keeps the ownership line clear. When an agent invokes shell or filesystem capabilities, the SDK sends the work through `session.exec()` into the container. Agents never call the Docker daemon directly. That keeps the toolkit layer focused on capability exposure while the runtime owns the container, the proxy, and the workspace layout.
 
@@ -22,9 +22,9 @@ Teardown runs through `cleanup()`. That path closes the Caido client, deletes th
 
 ## How tools reach the container
 
-The container image gives the sandbox its execution surface. `containers/Dockerfile` installs `python3`, `nmap`, the agent browser, Caido, and the other security tools that the toolkit layer exposes. `containers/docker-entrypoint.sh` starts Caido, waits for it to answer, writes proxy settings, and installs the CA into browser trust so HTTPS traffic inside the container follows the same interception path.
+The container image gives the sandbox its execution surface. `containers/Dockerfile` installs `python3`, `nmap`, the agent browser, Caido, and the other security tools that the toolkit layer exposes. `containers/docker-entrypoint.sh` starts Caido, waits for a response, writes proxy settings, and installs the CA into browser trust so HTTPS traffic inside the container uses the same interception path.
 
-The same runtime path also bootstraps Caido. `session_manager.py` sets HTTP and HTTPS proxy variables to the in-container listener, and `caido_bootstrap.py` logs in from inside the session, connects a client on the host, and selects a temporary project. That is why browser traffic and command line traffic can share the same interception layer.
+The session manager sets HTTP and HTTPS proxy variables to the in-container listener, and `caido_bootstrap.py` logs in from inside the session, connects a host client, and selects a temporary project. Browser traffic and command line traffic then follow the same interception layer.
 
 That design matters because the runtime sees only one container per scan. A root agent and every child agent share the same environment, so the tools in that container share the same workspace and proxy state. When a tool writes a file, opens a browser session, or launches a scanner, it does so inside that shared scan boundary.
 

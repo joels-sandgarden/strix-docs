@@ -5,11 +5,11 @@ description: "A concept-level field guide to the Strix codebase"
 
 # About this site
 
-This field guide explains Strix from the inside. It focuses on the architectural layer that the official docs at [docs.strix.ai](https://docs.strix.ai) do not cover: how a scan runs end to end, how agents share work, how the execution loop behaves, how the Docker sandbox isolates each scan, how proxy tools reach the model, how runs record evidence, and how findings turn into reports. The architecture it covers lives in `AgentCoordinator` (`strix/core/agents.py`), `run_agent_loop` (`strix/core/execution.py`), `StrixDockerSandboxClient` (`strix/runtime/docker_client.py`), `setup_scan_logging` (`strix/telemetry/logging.py`), and `write_vulnerabilities` (`strix/report/writer.py`).
+This field guide explains Strix from the inside. It focuses on the architectural layer that the official docs at [docs.strix.ai](https://docs.strix.ai) do not cover: how a scan runs end to end, how agents share work, how the execution loop behaves, how the Docker sandbox isolates each scan, how proxy tools reach the model, how runs record evidence, and how findings turn into reports. The chapters follow the path a scan takes through `AgentCoordinator` (`strix/core/agents.py`), `run_agent_loop` (`strix/core/execution.py`), the Docker sandbox, the proxy tools, the logging layer, and the report writer.
 
 Strix is an open-source autonomous AI penetration-testing tool built on the OpenAI Agents SDK. The repository pins `openai-agents[litellm]==0.14.6`, so Strix mainly configures and wraps SDK primitives instead of reimplementing them.
 
-This guide suits engineers who adopt Strix, embed it into an existing workflow, extend its runtime, or debug a scan that does not behave as expected. It also suits readers who want a grounded account of how an autonomous pentest agent gets composed from orchestration, sandboxing, proxying, logging, and reporting.
+This guide suits engineers who adopt Strix, embed it into an existing workflow, extend its runtime, or debug a scan that does not behave as expected. It also suits readers who want a grounded account of how an autonomous pentest agent gets composed from orchestration, sandboxing, proxying, logging, and reporting. That includes teams that need to understand why a scan parked, why a child agent spawned, or why a report wrote a finding in a particular order.
 
 ## How this site was made
 
@@ -19,7 +19,7 @@ Doc Holiday (https://doc.holiday) wrote this guide by exploring the Strix source
 
 ## Scope and corrections
 
-This guide captures a snapshot of an actively developed codebase pinned to a specific OpenAI Agents SDK version. Because the repository pins that SDK release, the guide reflects current behavior rather than a permanent contract. The official docs remain the authoritative reference for installation, usage, configuration, and the Skills concept. The [official Skills guide](https://docs.strix.ai/advanced/skills) covers that topic in its own right, so this page only mentions it as part of the wider documentation set.
+This guide captures a snapshot of an actively developed codebase pinned to a specific OpenAI Agents SDK version. Because the repository pins that SDK release, the guide reflects current behavior rather than a permanent contract. The official docs remain the authoritative reference for installation, usage, configuration, and the Skills concept. The [official Skills guide](https://docs.strix.ai/advanced/skills) covers that topic in its own right, so this page only mentions it as part of the wider documentation set. It leaves installation, usage, configuration, and Skills to the official docs, which already cover those topics in detail.
 
 [GENERATED_FROM: commit SHORT_SHA, DATE — the operator will replace this placeholder; include it verbatim, do NOT substitute a commit or date yourself]
 

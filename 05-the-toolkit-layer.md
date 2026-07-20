@@ -6,7 +6,7 @@ The toolkit layer gives the model one interface and hides two tool families unde
 
 The same split explains the rest of the runtime. Strix decides which tools each role gets, which skills load into the prompt, and which lifecycle tool ends a run. The SDK provides the actual tool transport and the sandbox capabilities that the model sees as ordinary tools.
 
-Related concept pages: [the graph of agents](./02-the-graph-of-agents.md), [the agent loop](./03-the-agent-loop.md), [the docker sandbox](./04-the-docker-sandbox.md), [seeing traffic, proxy and browser](./06-seeing-the-traffic-proxy-and-browser.md).
+Related concept pages: [the graph of agents](./02-the-graph-of-agents.md), [the agent loop](./03-the-agent-loop.md), [the docker sandbox](./04-the-docker-sandbox.md), [seeing traffic, proxy and browser](./06-seeing-traffic-proxy-and-browser.md).
 
 ## Host Side Function Tools
 

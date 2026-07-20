@@ -1,14 +1,14 @@
 # Telemetry, logging, and usage
 
-Strix does not emit distributed tracing spans in this snapshot. The OpenAI Agents SDK tracing layer is disabled, and the run record comes from three Strix-owned mechanisms: anonymous product analytics, per-scan structured logging, and the durable LLM usage ledger.
+Strix does not emit distributed tracing spans in this snapshot. The OpenAI Agents SDK tracing layer is disabled, so observability comes from three Strix-owned mechanisms: anonymous product analytics, per-scan structured logging, and the durable LLM usage ledger.
 
-`ReportState` owns the persisted scan artifact model. It stores the usage ledger and final report fields, and it does not consume SDK tracing processors. That keeps observability tied to the run directory instead of a tracing backend.
+`ReportState` stores the usage ledger and final report fields without consuming SDK tracing processors. Observability stays tied to the run directory instead of a tracing backend.
 
 ## Product analytics (anonymous)
 
 Strix sends anonymous product analytics to PostHog and Scarf. Each process gets its own `SESSION_ID`, and the payloads also carry coarse system properties: `os`, `arch`, `python`, and `strix_version`. The analytics layer records product-usage events such as `scan_started`, `finding_reported`, `skill_loaded`, `scan_ended`, and `error`, so the data reflects feature use rather than scan internals.
 
-Telemetry stays transparent and optional. The source tree documents the policy in `strix/telemetry/README.md`, and `STRIX_TELEMETRY=0` disables the analytics path completely. Strix does not collect identifying information, targets, vulnerability details, or raw LLM prompts and responses.
+Telemetry stays transparent and optional. `strix/telemetry/README.md` documents the policy, and `STRIX_TELEMETRY=0` disables the analytics path completely. Strix does not collect identifying information, targets, vulnerability details, or raw LLM prompts and responses.
 
 - Identifying information never enters the analytics payloads.
 - Targets never leave the scan record.
@@ -17,9 +17,9 @@ Telemetry stays transparent and optional. The source tree documents the policy i
 
 ## Per-scan structured logging (the real run trace)
 
-The run trace lives in `strix.log` inside the scan directory. `strix/telemetry/logging.py` attaches a context filter that stamps each record with `scan_id` and `agent_id`, and it wires that handler to the `strix` and `openai.agents` logger trees. The result gives a turn-by-turn reconstruction of what each agent does, without pretending to be a distributed tracer.
+The run trace lives in `strix.log` inside the scan directory. `strix/telemetry/logging.py` attaches a context filter that stamps each record with `scan_id` and `agent_id`, and it wires that handler to the `strix` and `openai.agents` logger trees. The result reconstructs a run turn by turn, without pretending to be a distributed tracer.
 
-`STRIX_DEBUG` only changes stderr verbosity. It makes the stream handler noisier, but it does not change the file log, which always receives the full structured record stream.
+`STRIX_DEBUG` only raises stderr verbosity. It makes the stream handler noisier, but it does not change the file log, which always receives the full structured record stream.
 
 Run data lives under `strix_runs/<run_name>/`. The run record sits in `run.json`, `strix.log` captures the run transcript, and `.state/` holds the coordinator snapshot in `agents.json` plus the per-agent SDK session database in `agents.db`. `--resume` reads that state back and continues the same agent tree; `./02-the-graph-of-agents.md` covers that tree and resume model in more detail.
 

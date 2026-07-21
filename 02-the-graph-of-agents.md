@@ -1,13 +1,12 @@
-# The graph of agents
+# The Graph of Agents
 
 ## Overview
 
-Strix models multi-agent work as a tree with a single root agent, `strix`, whose `parent=None`. Each child agent gets a short 8-hex id under that root, and each agent id carries an `AgentRuntime` with `session`, `task`, and `wake` handles. `AgentCoordinator` in `strix/core/agents.py` owns the non-LLM control plane for that tree; it is not itself an agent. The root agent `strix` speaks in natural language and steers the branches.
+Strix models a scan as a tree, not a vague graph of specialized agents. The root agent `strix` carries `parent=None` and does the reasoning and orchestration, while `AgentCoordinator` in `strix/core/agents.py` acts as the non-LLM control plane. Each child gets a short 8-hex id under that root, and the coordinator never becomes an agent itself.
 
-See also [The agent loop](./03-the-agent-loop.md), which explains the lifecycle rules that this page describes. For broader product framing, use [Skills](https://docs.strix.ai/advanced/skills) and [scan modes](https://docs.strix.ai/usage/scan-modes).
+The agent loop page, [The agent loop](./03-the-agent-loop.md), covers the lifecycle rules that keep this tree moving. The official docs already cover [Skills](https://docs.strix.ai/advanced/skills) and [scan modes](https://docs.strix.ai/usage/scan-modes).
 
-The diagram below shows the root, three children, and the flows that matter most: spawn, message, and completion.
-
+The diagram below shows one root and three children. Spawn arrows point from parent to child, and message arrows point into another agent's inbox or back into the parent's inbox.
 ```mermaid
 flowchart TD
   Root[strix]

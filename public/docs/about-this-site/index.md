@@ -19,7 +19,7 @@ This guide captures a snapshot of an actively developed codebase pinned to a spe
 
 commit 8cd9abb (2026-07-20)
 
-Corrections and updates are welcome through the site repository at https://github.com/joels-sandgarden/strix-docs.
+Corrections and updates are welcome through the site repository at https://github.com/sandgardenhq/strix-docs.
 
 ## Table of contents
 

@@ -27,9 +27,9 @@ flowchart TD
 
 The coordinator keeps the tree real. `AgentCoordinator` stores the live status for every node, maps each child to its parent, and keeps the runtime snapshots that let Strix rebuild a scan later. It does this because a multi-agent scan needs a single control plane that can answer questions about membership, ancestry, and liveness without asking the LLM itself. The consequence is simple: the tree has a stable source of truth, and every other subsystem reads from it.
 
-## Spawning stays detached
+## Spawning
 
-Child creation splits across `create_agent` in `strix/tools/agents_graph/tools.py` and `spawn_child_agent` in `strix/core/execution.py`. The graph tool asks the coordinator to register the new child, and the execution layer starts the child as a detached asyncio task so the parent keeps moving. This keeps the parent free to orchestrate while the child works in parallel, and it prevents the tree from turning into a single blocking call chain.
+`run_strix_scan` in `strix/core/runner.py` creates the root agent as `name="strix"` with `parent_id=None`, then installs a `spawn_child_agent` closure in the run context. `create_agent` in `strix/tools/agents_graph/tools.py` calls that closure, which reaches `spawn_child_agent` in `strix/core/execution.py`; the helper assigns a short 8-hex id, registers the child, opens a child session, and starts a detached asyncio task. The parent keeps moving while the child runs in parallel, so branching adds capacity instead of blocking the current turn.
 
 ## Coordination through sessions, not a message bus
 

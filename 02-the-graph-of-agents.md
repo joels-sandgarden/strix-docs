@@ -2,11 +2,11 @@
 
 ## Overview
 
-Strix models multi-agent work as a tree. The root agent is named `strix`, and every child agent gets a short 8-hex id under that root. The `AgentCoordinator` in `strix/core/agents.py` owns the control plane for that tree: it tracks `statuses`, `parent_of`, `names`, `metadata`, `pending_counts`, `runtimes`, and snapshots, while the root agent `strix` speaks in natural language and carries the orchestration story.
+Strix models multi-agent work as a tree. The root agent carries the name `strix`, and each child agent gets a short 8-hex id under that root. `AgentCoordinator` in `strix/core/agents.py` owns the control plane for that tree: it tracks `statuses`, `parent_of`, `names`, `metadata`, `pending_counts`, `runtimes`, and snapshots. The root agent `strix` speaks in natural language and steers the branches.
 
-The next layer in the guide, [The agent loop](./03-the-agent-loop.md), explains how the loop enforces the lifecycle rules that this page describes. For the broader product framing, see [Skills](https://docs.strix.ai/advanced/skills) and [scan modes](https://docs.strix.ai/usage/scan-modes).
+See also [The agent loop](./03-the-agent-loop.md), which explains the lifecycle rules that this page describes. For broader product framing, use [Skills](https://docs.strix.ai/advanced/skills) and [scan modes](https://docs.strix.ai/usage/scan-modes).
 
-The tree below shows the root, a few children, and the three flows that matter most: spawn, message, and completion.
+The diagram below shows the root, three children, and the flows that matter most: spawn, message, and completion.
 
 ```mermaid
 flowchart TD

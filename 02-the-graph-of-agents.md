@@ -32,7 +32,7 @@ flowchart TD
 
 ## Coordination through sessions, not a message bus
 
-Strix does not route agent traffic through a separate bus. `coordinator.send` appends a formatted user-role item into the target agent's SDK session, increments `pending_counts`, wakes the agent, and interrupts the active stream when `interrupt_on_message` is set. The inbox is the session itself, so `wait_for_message` and `consume_pending` reuse the same delivery path that the SDK already understands instead of building a second queue.
+Strix does not route agent traffic through a separate bus. `coordinator.send` appends a formatted user-role item into the target agent's SDK session, increments `pending_counts`, wakes the agent, and interrupts the active stream when `interrupt_on_message` is set. The inbox is the session itself, so `wait_for_message` and `consume_pending` reuse the same delivery path that the SDK already understands instead of building a second queue. That keeps every message inside the same turn history, so a resumed child sees the inbox it already knows instead of a separate transport layer.
 
 ## Inheritance at spawn
 

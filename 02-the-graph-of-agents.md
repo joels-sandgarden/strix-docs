@@ -35,9 +35,9 @@ Child creation splits across `create_agent` in `strix/tools/agents_graph/tools.p
 
 Strix does not route agent communication through a separate message bus. `send_message_to_agent` and the coordinator's `send` path append the new message into the target agent's SDK session, update pending counts, and wake the waiting agent; `wait_for_message` and `consume_pending` pick that work back up. That choice keeps inter-agent traffic inside the same session model the SDK already uses, so the runtime avoids a second delivery system. The consequence is direct and predictable: a message becomes the next thing the target agent sees when it resumes.
 
-## Children inherit context at birth
+## Inheritance at spawn
 
-`child_initial_input` in `strix/core/inputs.py` packages the parent's relevant history, the child's identity, and the assigned task into one initial user message. The child starts with that inherited context instead of a blank slate because the parent already knows which details matter for the subtask. The result is a narrower prompt surface, less duplicated explanation, and a child that begins with the right framing for its branch of work.
+`child_initial_input` in `strix/core/inputs.py` folds the parent's prior context into the child's first user message along with the new task and identity line. That gives the child the background it needs without making it continue the parent's work, and it keeps providers that insist on strict role alternation from rejecting the turn. The result is a child that starts informed, but still owns its own branch.
 
 ## Termination is tool-gated
 

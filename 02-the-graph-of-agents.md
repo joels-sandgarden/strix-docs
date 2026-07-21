@@ -25,7 +25,7 @@ flowchart TD
 
 ## The coordinator owns the tree
 
-The coordinator keeps the tree real. `AgentCoordinator` stores the live status for every node, maps each child to its parent, and keeps the runtime snapshots that let Strix rebuild a scan later. It does this because a multi-agent scan needs a single control plane that can answer questions about membership, ancestry, and liveness without asking the LLM itself. The consequence is simple: the tree has a stable source of truth, and every other subsystem reads from it.
+`AgentCoordinator` owns the tree as a control plane, not as an agent. `strix/core/agents.py` gives it parallel maps for `statuses`, `parent_of`, `names`, `metadata`, `pending_counts`, and `runtimes`, plus the lock, snapshot path, and shutdown flags that keep the scan consistent. `AgentRuntime` holds the live SDK `session`, the current asyncio `task`, the active `stream`, the `interrupt_on_message` flag, and the wake `Event`, so the coordinator can steer live work without inventing a second runtime model.
 
 ## Spawning
 

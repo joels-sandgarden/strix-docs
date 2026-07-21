@@ -1,0 +1,22 @@
+header:
+  title: Mental models, not API dumps.
+  description: Each page transfers the mental model of one part of Strix — what it is for, the design decisions behind it, and how it relates to its neighbors.
+
+items:
+  - col: col-5
+    icon: bento/rocket_launch
+    title: See the machine, not just the CLI
+    description: The guide covers Strix's spine — how one scan runs from command to reported finding, how the root agent spawns a tree of specialists, how the agent loop works, and how the Docker sandbox and proxy give the agent eyes on the target — so you can hold the whole system in your head before opening a file.
+    badges: [ ]
+
+  - col: col-7
+    icon: bento/extension
+    title: Grounded in the source
+    description: Every claim cites real files and symbols from the Strix repository, and every guide page ends with a "Where to look in the code" map. It is honest about what Strix builds itself and what it inherits from the OpenAI Agents SDK it is built on.
+    badges: [ Agent graph, Sandbox, Proxy, Reports ]
+
+  - col: col-7
+    icon: bento/shield
+    title: Complements the official docs
+    description: docs.strix.ai owns installation, usage, configuration, and the Skills concept — and covers them well. This guide adds the architectural layer those docs skip — the agent orchestration, the loop, the sandbox isolation model, the toolkit layer, traffic interception, and the report model.
+    badges: [ ]

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>http://localhost:1320/docs/about-this-site/</loc>
+  </url><url>
+    <loc>http://localhost:1320/docs/anatomy-of-a-scan/</loc>
+  </url><url>
+    <loc>http://localhost:1320/docs/from-finding-to-report/</loc>
+  </url><url>
+    <loc>http://localhost:1320/</loc>
+  </url><url>
+    <loc>http://localhost:1320/docs/telemetry-logging-and-usage/</loc>
+  </url><url>
+    <loc>http://localhost:1320/docs/the-agent-loop/</loc>
+  </url><url>
+    <loc>http://localhost:1320/docs/the-big-picture/</loc>
+  </url><url>
+    <loc>http://localhost:1320/docs/the-docker-sandbox/</loc>
+  </url><url>
+    <loc>http://localhost:1320/docs/the-graph-of-agents/</loc>
+  </url><url>
+    <loc>http://localhost:1320/docs/the-toolkit-layer/</loc>
+  </url><url>
+    <loc>http://localhost:1320/docs/traffic-interception/</loc>
+  </url>
+</urlset>

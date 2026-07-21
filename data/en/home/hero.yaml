@@ -1,0 +1,18 @@
+# The wordmark SVG is disabled (empty string, not deleted, so the E25DX theme
+# default doesn't merge back in) — the header logo already carries the name.
+svg: ""
+
+badge: Written by Doc Holiday
+
+# The <span> gets the gradient text treatment (see hero.css).
+title: Strix, explained at the <span>concept level</span>.
+
+description: A field guide to the Strix codebase — how a scan runs end to end, how a tree of AI agents is orchestrated, what the agent loop really is on top of the OpenAI Agents SDK, how the Docker sandbox isolates a scan, and how findings become a report. Written by exploring the source directly, page by page.
+
+btn_primary:
+  label: Read the guide
+  url: docs/the-big-picture/
+
+btn_secondary:
+  label: Strix on GitHub
+  url: https://github.com/usestrix/strix

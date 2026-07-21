@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Strix Field Guide</title>
+		<link>http://localhost:1320/</link>
+		<description>Recent content on Strix Field Guide</description>
+		<generator>Hugo</generator>
+		<language>en-US</language>
+		
+		
+		
+		
+			<atom:link href="http://localhost:1320/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>About This Site</title>
+				<link>http://localhost:1320/docs/about-this-site/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1320/docs/about-this-site/</guid>
+				<description>&lt;p&gt;This field guide explains Strix from the inside. It focuses on the architectural layer that the official docs at &lt;a href=&#34;https://docs.strix.ai&#34; target=&#34;_blank&#34;&gt;docs.strix.ai&lt;/a&gt;&#xA; do not cover: how a scan runs end to end, how agents share work, how the execution loop behaves, how the Docker sandbox isolates each scan, how proxy tools reach the model, how runs record evidence, and how findings turn into reports. The chapters follow the path a scan takes through &lt;code&gt;AgentCoordinator&lt;/code&gt; (&lt;code&gt;strix/core/agents.py&lt;/code&gt;), &lt;code&gt;run_agent_loop&lt;/code&gt; (&lt;code&gt;strix/core/execution.py&lt;/code&gt;), the Docker sandbox, the proxy tools, the logging layer, and the report writer.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Anatomy of a Scan</title>
+				<link>http://localhost:1320/docs/anatomy-of-a-scan/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1320/docs/anatomy-of-a-scan/</guid>
+				<description>&lt;p&gt;Strix scans run on the OpenAI Agents SDK. The SDK runner drives the loop; Strix wraps that runner with orchestration, prompting, sandboxing, proxying, and reporting so the scan behaves like a complete product flow instead of a bare model call.&lt;/p&gt;&#xA;&lt;p&gt;The sections below describe the shape of that pipeline at a high level, not the individual API calls inside it.&lt;/p&gt;&#xA;&lt;pre class=&#34;mermaid&#34;&gt;flowchart LR&#xA;  Launch[Launch] --&amp;gt; Setup[Set up]&#xA;  Setup --&amp;gt; Sandbox[Sandbox]&#xA;  Setup --&amp;gt; Proxy[Proxy]&#xA;  Setup --&amp;gt; Coord[Coordinator]&#xA;  Setup --&amp;gt; Root[Root agent]&#xA;  Setup --&amp;gt; Context[Load context]&#xA;  Context --&amp;gt; Prompt[System prompt]&#xA;  Context --&amp;gt; Skills[Skills]&#xA;  Context --&amp;gt; Loop[Work loop]&#xA;  Loop --&amp;gt; Reason[Reason]&#xA;  Reason --&amp;gt; Act[Act]&#xA;  Act --&amp;gt; Observe[Observe]&#xA;  Observe --&amp;gt; Loop&#xA;  Loop --&amp;gt; Access[Sandbox access]&#xA;  Loop --&amp;gt; Spawn[Spawn children]&#xA;  Spawn --&amp;gt; Finding[Finding]&#xA;  Finding --&amp;gt; Finish[Finish and report]&lt;/pre&gt;&#xA;&lt;h2 id=&#34;starting-a-scan&#34;&gt;Starting a scan&lt;/h2&gt;&#xA;&lt;p&gt;&lt;code&gt;strix&lt;/code&gt; turns a command into a live scan by validating the environment, making sure the sandbox image is present, and handing off to either the interactive TUI or a headless run for CI. From there it becomes a running investigation rather than a one-off command.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>From Finding to Report</title>
+				<link>http://localhost:1320/docs/from-finding-to-report/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1320/docs/from-finding-to-report/</guid>
+				<description>&lt;p&gt;This page explains how Strix turns a discovered vulnerability into a validated finding and then into the report artifacts that leave a scan run. The reporting layer sits on top of the OpenAI Agents SDK: the SDK runs the agent loop, while Strix owns the reporting glue around tools, shared state, deduplication, and writers.&lt;/p&gt;&#xA;&lt;h2 id=&#34;related-pages&#34;&gt;Related pages&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://localhost:1320/docs/the-big-picture/&#34;&gt;The big picture&lt;/a&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://localhost:1320/docs/anatomy-of-a-scan/&#34;&gt;Anatomy of a scan&lt;/a&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://localhost:1320/docs/the-graph-of-agents/&#34;&gt;The graph of agents&lt;/a&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://localhost:1320/docs/the-agent-loop/&#34;&gt;The agent loop&lt;/a&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://localhost:1320/docs/the-docker-sandbox/&#34;&gt;The Docker sandbox&lt;/a&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://localhost:1320/docs/the-toolkit-layer/&#34;&gt;The toolkit layer&lt;/a&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://localhost:1320/docs/traffic-interception/&#34;&gt;Seeing traffic: proxy and browser&lt;/a&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://localhost:1320/docs/telemetry-logging-and-usage/&#34;&gt;Telemetry, logging, and usage&lt;/a&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;http://localhost:1320/docs/about-this-site/&#34;&gt;About this site&lt;/a&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;reportstate-as-the-live-hub&#34;&gt;&lt;code&gt;ReportState&lt;/code&gt; as the live hub&lt;/h2&gt;&#xA;&lt;p&gt;&lt;code&gt;ReportState&lt;/code&gt; in &lt;code&gt;strix/report/state.py&lt;/code&gt; keeps the scan&amp;rsquo;s vulnerability reports, final scan result, usage ledger, and &lt;code&gt;vulnerability_found_callback&lt;/code&gt; in memory. &lt;code&gt;set_global_report_state&lt;/code&gt; and &lt;code&gt;get_global_report_state&lt;/code&gt; make that object process-global, so any agent can write into the same run state and the interface layer can surface the report immediately through that callback.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Telemetry Logging and Usage</title>
+				<link>http://localhost:1320/docs/telemetry-logging-and-usage/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1320/docs/telemetry-logging-and-usage/</guid>
+				<description>&lt;p&gt;Strix does not emit distributed tracing spans in this snapshot because &lt;code&gt;strix/config/models.py&lt;/code&gt; calls &lt;code&gt;set_tracing_disabled(True)&lt;/code&gt; and &lt;code&gt;ReportState&lt;/code&gt; in &lt;code&gt;strix/report/state.py&lt;/code&gt; does not consume SDK tracing processors. Instead, observability stays tied to three Strix-owned mechanisms: anonymous product analytics, per-scan structured logging, and the durable LLM usage ledger.&lt;/p&gt;&#xA;&lt;h2 id=&#34;product-analytics-anonymous&#34;&gt;Product analytics (anonymous).&lt;/h2&gt;&#xA;&lt;p&gt;Strix sends anonymous product analytics to PostHog and Scarf. Each process gets its own &lt;code&gt;SESSION_ID&lt;/code&gt;, and the payloads also carry coarse system properties: &lt;code&gt;os&lt;/code&gt;, &lt;code&gt;arch&lt;/code&gt;, &lt;code&gt;python&lt;/code&gt;, and &lt;code&gt;strix_version&lt;/code&gt;. The analytics layer records product-usage events such as &lt;code&gt;scan_started&lt;/code&gt;, &lt;code&gt;finding_reported&lt;/code&gt;, &lt;code&gt;skill_loaded&lt;/code&gt;, &lt;code&gt;scan_ended&lt;/code&gt;, and &lt;code&gt;error&lt;/code&gt;, so the data reflects feature use rather than scan internals.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>The Agent Loop</title>
+				<link>http://localhost:1320/docs/the-agent-loop/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1320/docs/the-agent-loop/</guid>
+				<description>&lt;p&gt;The OpenAI Agents SDK owns the inner reason, act, and observe cycle through &lt;code&gt;Runner.run_streamed&lt;/code&gt;. Strix wraps that stream with policy in &lt;code&gt;strix/core/execution.py&lt;/code&gt;: it watches each turn, decides when to park, when to retry, when to stop on lifecycle tools, and when to settle a scan. That split matters in practice because Strix observes the model stream rather than rebuilding it, so the SDK keeps control of the conversation while Strix keeps control of scan policy. The familiar think-plan-act-observe story only works here as a behavioral shorthand: Strix does not implement a separate state machine, and the code never names one.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>The Big Picture</title>
+				<link>http://localhost:1320/docs/the-big-picture/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1320/docs/the-big-picture/</guid>
+				<description>&lt;p&gt;Strix runs on top of the OpenAI Agents SDK (&lt;code&gt;openai-agents[litellm]==0.14.6&lt;/code&gt; in &lt;code&gt;pyproject.toml&lt;/code&gt;). The SDK owns the single-agent execution loop, the sandbox client, and the shell, filesystem, &lt;code&gt;apply_patch&lt;/code&gt;, and &lt;code&gt;view_image&lt;/code&gt; capabilities; Strix layers scan orchestration, prompting, skills, Docker and proxy customizations, reporting, telemetry, and the CLI and TUI around that core. This guide covers the connective architecture that the official docs at &lt;a href=&#34;https://docs.strix.ai/quickstart&#34; target=&#34;_blank&#34;&gt;Quickstart&lt;/a&gt;&#xA; and &lt;a href=&#34;https://docs.strix.ai/advanced/skills&#34; target=&#34;_blank&#34;&gt;Skills&lt;/a&gt;&#xA; leave to the reference pages.&lt;/p&gt;&#xA;&lt;h2 id=&#34;package-map&#34;&gt;Package map&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;code&gt;strix/interface/&lt;/code&gt; — CLI and Textual TUI entry points (&lt;code&gt;main.py&lt;/code&gt;, &lt;code&gt;cli.py&lt;/code&gt;, &lt;code&gt;tui/&lt;/code&gt;).&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;strix/core/&lt;/code&gt; — orchestration and lifecycle control (&lt;code&gt;runner.py&lt;/code&gt;, &lt;code&gt;execution.py&lt;/code&gt;, &lt;code&gt;agents.py&lt;/code&gt;, &lt;code&gt;hooks.py&lt;/code&gt;, &lt;code&gt;inputs.py&lt;/code&gt;).&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;strix/agents/&lt;/code&gt; — agent construction and prompt context (&lt;code&gt;factory.py&lt;/code&gt;, &lt;code&gt;prompt.py&lt;/code&gt;, system prompt Jinja).&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;strix/tools/&lt;/code&gt; — host side function tools plus README stubs for SDK sandbox tools.&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;strix/runtime/&lt;/code&gt; — Docker sandbox lifecycle and Caido proxy setup.&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;strix/report/&lt;/code&gt; — findings state and artifact writers.&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;strix/telemetry/&lt;/code&gt; — product analytics and per-scan logging.&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;strix/config/&lt;/code&gt; — settings and model/provider wiring.&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;strix/skills/&lt;/code&gt; — pentest playbooks injected into prompts; the concept page already lives in the official docs.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;The sandbox image definition lives in the repo root &lt;code&gt;containers/&lt;/code&gt;, not under &lt;code&gt;strix/&lt;/code&gt;.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>The Docker Sandbox</title>
+				<link>http://localhost:1320/docs/the-docker-sandbox/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1320/docs/the-docker-sandbox/</guid>
+				<description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;&#xA;&lt;p&gt;Strix uses a Docker container as the isolation model for each scan. The official &lt;a href=&#34;https://docs.strix.ai/tools/sandbox&#34; target=&#34;_blank&#34;&gt;Sandbox Tools&lt;/a&gt;&#xA; page lists the preinstalled tools inside that container; this page explains the boundary itself and the runtime that owns it. One container serves the whole agent tree, so sibling and child agents work inside the same workspace and network context.&lt;/p&gt;&#xA;&lt;p&gt;For the broader scan and agent model, see &lt;a href=&#34;http://localhost:1320/docs/anatomy-of-a-scan/&#34;&gt;Anatomy of a scan&lt;/a&gt;&#xA;, &lt;a href=&#34;http://localhost:1320/docs/the-graph-of-agents/&#34;&gt;The graph of agents&lt;/a&gt;&#xA;, &lt;a href=&#34;http://localhost:1320/docs/the-agent-loop/&#34;&gt;The agent loop&lt;/a&gt;&#xA;, &lt;a href=&#34;http://localhost:1320/docs/the-toolkit-layer/&#34;&gt;The toolkit layer&lt;/a&gt;&#xA;, and &lt;a href=&#34;http://localhost:1320/docs/traffic-interception/&#34;&gt;Seeing traffic, proxy, and browser&lt;/a&gt;&#xA;.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>The Graph of Agents</title>
+				<link>http://localhost:1320/docs/the-graph-of-agents/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1320/docs/the-graph-of-agents/</guid>
+				<description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;&#xA;&lt;p&gt;Strix models a scan as a tree, not a vague graph of specialized agents. The root agent &lt;code&gt;strix&lt;/code&gt; carries &lt;code&gt;parent=None&lt;/code&gt; and does the reasoning and orchestration, while &lt;code&gt;AgentCoordinator&lt;/code&gt; in &lt;code&gt;strix/core/agents.py&lt;/code&gt; acts as the non-LLM control plane. Each child gets a short 8-hex id under that root, and the coordinator never becomes an agent itself.&lt;/p&gt;&#xA;&lt;p&gt;The agent loop page, &lt;a href=&#34;http://localhost:1320/docs/the-agent-loop/&#34;&gt;The agent loop&lt;/a&gt;&#xA;, covers the lifecycle rules that keep this tree moving. The official docs already cover &lt;a href=&#34;https://docs.strix.ai/advanced/skills&#34; target=&#34;_blank&#34;&gt;Skills&lt;/a&gt;&#xA; and &lt;a href=&#34;https://docs.strix.ai/usage/scan-modes&#34; target=&#34;_blank&#34;&gt;scan modes&lt;/a&gt;&#xA;.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>The Toolkit Layer</title>
+				<link>http://localhost:1320/docs/the-toolkit-layer/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1320/docs/the-toolkit-layer/</guid>
+				<description>&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;&#xA;&lt;p&gt;The toolkit layer gives the model one interface and hides two tool families underneath it. Host-side function tools run in the Strix process and read the run context; SDK sandbox capabilities run inside the Docker sandbox and execute there. &lt;code&gt;build_strix_agent&lt;/code&gt; in &lt;code&gt;strix/agents/factory.py&lt;/code&gt; connects both sides, while the OpenAI Agents SDK owns tool discovery and schema exposure once the tools reach &lt;code&gt;SandboxAgent&lt;/code&gt;.&lt;/p&gt;&#xA;&lt;p&gt;The same split explains the rest of the runtime. Strix decides which tools each role gets, which skills load into the prompt, and which lifecycle tool ends a run. The SDK provides the actual tool transport and the sandbox capabilities that the model sees as ordinary tools.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>Traffic Interception</title>
+				<link>http://localhost:1320/docs/traffic-interception/</link>
+				<pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1320/docs/traffic-interception/</guid>
+				<description>&lt;p&gt;Strix intercepts traffic through the environment, not through per-tool instrumentation. One sandbox, one Caido sidecar, and one browser path share the same boundary, so &lt;code&gt;curl&lt;/code&gt;, Python, and &lt;code&gt;agent-browser&lt;/code&gt; all ride the rail when they honor the injected proxy settings.&lt;/p&gt;&#xA;&lt;h2 id=&#34;overview&#34;&gt;Overview&lt;/h2&gt;&#xA;&lt;p&gt;The design centers on a single sandbox per scan and a single proxy control plane. &lt;code&gt;containers/docker-entrypoint.sh&lt;/code&gt; starts &lt;code&gt;caido-cli&lt;/code&gt; inside the container, exports the proxy variables system wide, and installs the local CA into the container&amp;rsquo;s browser trust store (the system trust store is set up earlier, at image build time). That CA lets Caido decrypt HTTPS inside the sandbox, while &lt;code&gt;http_proxy&lt;/code&gt;, &lt;code&gt;https_proxy&lt;/code&gt;, &lt;code&gt;ALL_PROXY&lt;/code&gt;, and &lt;code&gt;NO_PROXY&lt;/code&gt; give proxy-aware clients a shared route out.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

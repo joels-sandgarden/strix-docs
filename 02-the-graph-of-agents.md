@@ -28,7 +28,7 @@ flowchart TD
 
 ## Spawning
 
-`run_strix_scan` in `strix/core/runner.py` creates the root agent as `name="strix"` with `parent_id=None`, then installs a `spawn_child_agent` closure in the run context. `create_agent` in `strix/tools/agents_graph/tools.py` calls that closure, which reaches `spawn_child_agent` in `strix/core/execution.py`; the helper assigns a short 8-hex id, registers the child, opens a child session, and starts a detached asyncio task. The parent keeps moving while the child runs in parallel, so branching adds capacity instead of blocking the current turn.
+`run_strix_scan` in `strix/core/runner.py` creates the root agent as `name="strix"` with `parent_id=None`, then installs a `spawn_child_agent` closure in the run context. `create_agent` in `strix/tools/agents_graph/tools.py` calls that closure, which reaches `spawn_child_agent` in `strix/core/execution.py`; the helper assigns a short 8-hex id, registers the child, opens a child session, and starts a detached asyncio task. The parent keeps moving while the child runs in parallel, so branching adds capacity instead of blocking the current turn. The parent and child also keep separate sessions, which keeps parallel work easy to address later.
 
 ## Coordination through sessions, not a message bus
 

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Strix models multi-agent work as a tree. The root agent carries the name `strix`, and each child agent gets a short 8-hex id under that root. `AgentCoordinator` in `strix/core/agents.py` owns the control plane for that tree: it tracks `statuses`, `parent_of`, `names`, `metadata`, `pending_counts`, `runtimes`, and snapshots. The root agent `strix` speaks in natural language and steers the branches.
+Strix models multi-agent work as a tree with a single root agent, `strix`, whose `parent=None`. Each child agent gets a short 8-hex id under that root, and each agent id carries an `AgentRuntime` with `session`, `task`, and `wake` handles. `AgentCoordinator` in `strix/core/agents.py` owns the non-LLM control plane for that tree; it is not itself an agent. The root agent `strix` speaks in natural language and steers the branches.
 
 See also [The agent loop](./03-the-agent-loop.md), which explains the lifecycle rules that this page describes. For broader product framing, use [Skills](https://docs.strix.ai/advanced/skills) and [scan modes](https://docs.strix.ai/usage/scan-modes).
 
@@ -49,7 +49,7 @@ Strix does not route agent communication through a separate message bus. `send_m
 
 ## The tree is real control state
 
-Subtree walks and descendant-cancellation behavior prove that control flows through a tree, not a flat pool of workers. `AgentCoordinator` can inspect or stop a branch because descendants inherit that structure. That keeps branch-level operations precise and lets the runtime target one subtree without touching the rest of the scan.
+Subtree walks and cancellation stay first-class because `AgentCoordinator` exposes `cancel_descendants` and `cancel_descendants_graceful`. Those methods show that the tree is load-bearing control state: Strix can inspect or stop one branch without touching the rest of the scan.
 
 ## Where to look in the code
 

@@ -43,9 +43,9 @@ Strix does not route agent communication through a separate message bus. `send_m
 
 `agent_finish` ends a child agent, and `finish_scan` in `strix/tools/finish/tool.py` ends the root scan. Both tools reject premature completion while children still run, and `finish_scan` keeps that guard at the top level so the root cannot claim success before the tree finishes. That constraint exists because the scan only completes when the coordinator can account for every live descendant. The next page, [The agent loop](./03-the-agent-loop.md), covers the loop-level enforcement that keeps this guard in place.
 
-## Resume rebuilds the live branches
+## Resume rebuilds the tree
 
-`respawn_subagents` in `strix/core/execution.py` restores non-terminal descendants from the persisted coordinator snapshot when a scan resumes. The runtime rebuilds the same tree shape instead of starting over because a paused branch still has identity, state, and unfinished work. The consequence is continuity: finished branches stay finished, live branches come back, and the coordinator can pick up the same ancestry map it had before the pause.
+`run_strix_scan` treats resume as an "as of" capability. It reloads the coordinator snapshot, then `respawn_subagents` in `strix/core/execution.py` reconstructs only the non-terminal descendants from that snapshot and restarts them with their saved names, tasks, and skills. Finished branches stay finished, live branches come back, and the tree resumes from the same ancestry map instead of starting over.
 
 ## The tree is load bearing
 

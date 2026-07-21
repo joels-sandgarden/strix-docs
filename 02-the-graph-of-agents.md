@@ -24,7 +24,7 @@ flowchart TD
 
 ## The coordinator owns the tree
 
-`AgentCoordinator` owns the tree as a control plane, not as an agent. `strix/core/agents.py` gives it parallel maps for `statuses`, `parent_of`, `names`, `metadata`, `pending_counts`, and `runtimes`, plus the lock, snapshot path, and shutdown flags that keep the scan consistent. `AgentRuntime` holds the live SDK `session`, the current asyncio `task`, the active `stream`, the `interrupt_on_message` flag, and the wake `Event`, so the coordinator can steer live work without inventing a second runtime model.
+`AgentCoordinator` owns the tree as a control plane, not as an agent. `strix/core/agents.py` gives it parallel maps for `statuses`, `parent_of`, `names`, `metadata`, `pending_counts`, and `runtimes`, plus the lock, snapshot path, and shutdown flags that keep the scan consistent. `AgentRuntime` holds the live SDK `session`, the current asyncio `task`, the active `stream`, the `interrupt_on_message` flag, and the wake `Event`, so the coordinator can steer live work without inventing a second runtime model. That structure lets `view_agent_graph`, `wait_for_message`, and subtree cancellation read the same state from one place.
 
 ## Spawning
 

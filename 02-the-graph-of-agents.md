@@ -47,9 +47,9 @@ Strix does not route agent communication through a separate message bus. `send_m
 
 `respawn_subagents` in `strix/core/execution.py` restores non-terminal descendants from the persisted coordinator snapshot when a scan resumes. The runtime rebuilds the same tree shape instead of starting over because a paused branch still has identity, state, and unfinished work. The consequence is continuity: finished branches stay finished, live branches come back, and the coordinator can pick up the same ancestry map it had before the pause.
 
-## The tree is real control state
+## The tree is load bearing
 
-Subtree walks and cancellation stay first-class because `AgentCoordinator` exposes `cancel_descendants` and `cancel_descendants_graceful`. Those methods show that the tree carries load-bearing control state: Strix can inspect or stop one branch without touching the rest of the scan.
+`view_agent_graph` walks `parent_of` to render the hierarchy, and `stop_agent` can cancel a subtree by walking descendants in leaves-first order. Those behaviors work only because the tree shape carries real control meaning, not because the code keeps a flat pool of interchangeable workers. That is why the parent links matter everywhere from messaging to shutdown.
 
 ## Where to look in the code
 

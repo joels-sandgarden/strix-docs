@@ -49,7 +49,7 @@ Strix does not route agent communication through a separate message bus. `send_m
 
 ## The tree is real control state
 
-Subtree walks and descendant-cancellation behavior make the tree load-bearing. `AgentCoordinator` can walk downward through descendants and stop or inspect a branch because the structure encodes real control relationships, not just presentation. That design keeps branch-level operations precise: the runtime can target one subtree without pretending the whole scan is a flat pool of workers.
+Subtree walks and descendant-cancellation behavior prove that control flows through a tree, not a flat pool of workers. `AgentCoordinator` can inspect or stop a branch because descendants inherit that structure. That keeps branch-level operations precise and lets the runtime target one subtree without touching the rest of the scan.
 
 ## Where to look in the code
 

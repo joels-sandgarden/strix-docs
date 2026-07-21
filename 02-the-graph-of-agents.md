@@ -31,9 +31,9 @@ The coordinator keeps the tree real. `AgentCoordinator` stores the live status f
 
 Child creation splits across `create_agent` in `strix/tools/agents_graph/tools.py` and `spawn_child_agent` in `strix/core/execution.py`. The graph tool asks the coordinator to register the new child, and the execution layer starts the child as a detached asyncio task so the parent keeps moving. This keeps the parent free to orchestrate while the child works in parallel, and it prevents the tree from turning into a single blocking call chain.
 
-## Messages travel through agent sessions
+## Coordination through sessions, not a message bus
 
-Strix does not route agent communication through a separate message bus. `send_message_to_agent` and the coordinator's `send` path append the new message into the target agent's SDK session, update pending counts, and wake the waiting agent; `wait_for_message` and `consume_pending` pick that work back up. That choice keeps inter-agent traffic inside the same session model the SDK already uses, so the runtime avoids a second delivery system. The consequence is direct and predictable: a message becomes the next thing the target agent sees when it resumes.
+Strix does not route agent traffic through a separate bus. `coordinator.send` appends a formatted user-role item into the target agent's SDK session, increments `pending_counts`, wakes the agent, and interrupts the active stream when `interrupt_on_message` is set. The inbox is the session itself, so `wait_for_message` and `consume_pending` reuse the same delivery path that the SDK already understands instead of building a second queue.
 
 ## Inheritance at spawn
 

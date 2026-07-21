@@ -53,9 +53,9 @@ Subtree walks and cancellation stay first-class because `AgentCoordinator` expos
 
 ## Where to look in the code
 
-- `strix/core/agents.py` — `AgentRuntime`, `Status`, `AgentCoordinator`, pending counts, wake events, subtree walks, and snapshots.
-- `strix/core/execution.py` — `run_agent_loop`, `spawn_child_agent`, `respawn_subagents`, and detached child startup.
-- `strix/core/inputs.py` — `child_initial_input` and inherited context assembly.
-- `strix/tools/agents_graph/tools.py` — `create_agent`, `send_message_to_agent`, `wait_for_message`, `agent_finish`, `stop_agent`, and the graph view.
-- `strix/tools/finish/tool.py` — `finish_scan` and the root-only completion guard.
-- `strix/core/runner.py` and `strix/agents/factory.py` — root registration as `strix`, `parent_id=None`, and the root and child tool attachments.
+- `strix/core/runner.py` — creates the root agent `strix`, installs `spawn_child_agent`, and respawns non-terminal children on resume.
+- `strix/core/agents.py` — holds `AgentCoordinator`, `AgentRuntime`, status maps, parent links, pending counts, wake events, snapshots, and shutdown state.
+- `strix/core/execution.py` — starts detached child tasks, opens child sessions, and rebuilds children from persisted state with `respawn_subagents`.
+- `strix/core/inputs.py` — builds `child_initial_input`, which carries inherited context into a child's first user message.
+- `strix/tools/agents_graph/tools.py` — exposes `view_agent_graph`, `create_agent`, `send_message_to_agent`, `wait_for_message`, `agent_finish`, and `stop_agent`.
+- `strix/tools/finish/tool.py` and `strix/agents/factory.py` — enforce root-only scan completion and attach the lifecycle tools to root and child `SandboxAgent`s.

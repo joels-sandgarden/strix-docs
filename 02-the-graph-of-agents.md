@@ -39,9 +39,9 @@ Strix does not route agent communication through a separate message bus. `send_m
 
 `child_initial_input` in `strix/core/inputs.py` packages the parent's relevant history, the child's identity, and the assigned task into one initial user message. The child starts with that inherited context instead of a blank slate because the parent already knows which details matter for the subtask. The result is a narrower prompt surface, less duplicated explanation, and a child that begins with the right framing for its branch of work.
 
-## Termination stays tool gated
+## Termination is tool-gated
 
-`agent_finish` ends a child agent, and `finish_scan` in `strix/tools/finish/tool.py` ends the root scan. Both tools reject premature completion while children still run, and `finish_scan` keeps that guard at the top level so the root cannot claim success before the tree finishes. That constraint exists because the scan only completes when the coordinator can account for every live descendant. The next page, [The agent loop](./03-the-agent-loop.md), covers the loop-level enforcement that keeps this guard in place.
+`agent_finish` is the child exit path. It marks the child `completed`, sends a completion report into the parent's inbox, and lets the parent decide what to do next. `finish_scan` in `strix/tools/finish/tool.py` is the root-only exit path; it persists the final report, refuses to finish while any child remains active, and sets the root agent to `completed` when the scan closes cleanly. That gate keeps [The agent loop](./03-the-agent-loop.md) honest, and the lifecycle tools themselves live with the rest of the toolkit layer in [The toolkit layer](./05-the-toolkit-layer.md).
 
 ## Resume rebuilds the tree
 

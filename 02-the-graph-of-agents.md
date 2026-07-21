@@ -44,7 +44,7 @@ Strix does not route agent traffic through a separate bus. `coordinator.send` ap
 
 ## Resume rebuilds the tree
 
-`run_strix_scan` treats resume as an "as of" capability. It reloads the coordinator snapshot, then `respawn_subagents` in `strix/core/execution.py` reconstructs only the non-terminal descendants from that snapshot and restarts them with their saved names, tasks, and skills. Finished branches stay finished, live branches come back, and the tree resumes from the same ancestry map instead of starting over.
+`run_strix_scan` treats resume as an "as of" capability. It reloads the coordinator snapshot, then `respawn_subagents` in `strix/core/execution.py` reconstructs only the non-terminal descendants from that snapshot and restarts them with their saved names, tasks, and skills. Finished branches stay finished, live branches come back, and the tree resumes from the same ancestry map instead of starting over. The resumed tree also keeps completed nodes complete and waiting nodes waiting, instead of relaunching everything from scratch.
 
 ## The tree is load bearing
 
